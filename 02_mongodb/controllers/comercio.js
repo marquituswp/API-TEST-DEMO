@@ -10,6 +10,10 @@ const getComercios = async (req, res) => {
         const data = await comercioModel.find({}).  
         sort(order ? {cif: 1} : {});
 
+        if (!data){
+            handleHttpError(res,"No hay comercios",404)
+        }
+
         res.status(200).json(data);
     }
     catch (error) {
@@ -23,9 +27,8 @@ const getComercioByCif = async (req, res) => {
         // Busco el comercio por el cif
         const data = await comercioModel.findOne({cif}); 
         // Compruebo que el comercio exista
-        if (!data) {
-            res.status(400).json({error: "El comercio no existe"});
-            return;
+        if (!data){
+            handleHttpError(res,"Comercio no encontrado",404)
         }
         res.status(200).json(data);
     }
@@ -37,20 +40,13 @@ const getComercioByCif = async (req, res) => {
 const createComercio = async (req, res) => {
     try {
         const comercio = matchedData(req);
-        // Compruebo que los datos del comercio no estén vacíos y que el comercio no exista
-        if (!comercio.cif || !comercio.name || !comercio.email || !comercio.phone || !comercio.page_id) {
-            res.status(400).json({error: "Faltan datos"});
-            return;
-        }else if (await comercioModel.findOne({cif: comercio.cif})) {
-            res.status(400).json({error: "El comercio ya existe"});
-            return;
-        }else if (await comercioModel.findOne({page_id: comercio.page_id})) {
-            res.status(400).json({error: "El page_id ya está en uso"});
-            return;
-        }
         // Creo el comercio
         const data = await comercioModel.create(comercio); 
         
+        if (!data){
+            handleHttpError(res,"Comercio no encontrado",404)
+        }
+
         res.status(201).json(data);
     }
     catch (error) {
@@ -60,21 +56,14 @@ const createComercio = async (req, res) => {
 
 const modifyComercio = async (req, res) => {
     try {
-        const {id,...comercio} = matchedData(req);
-        // Comprobaciones para modificar el comercio
-        if (!await comercioModel.findById({_id:id})) {
-            res.status(400).json({error: "El comercio no existe"});
-            return;
-        }else if (comercio.deleted) {
-            res.status(400).json({error: "No puedes modificar un comercio eliminado de forma lógica"});
-            return;
-        } else if (await comercioModel.findOne({page_id: comercio.page_id, _id: {$ne: id}})) {
-            res.status(400).json({error: "El page_id ya está en uso"});
-            return;
-        }
+        const {cifId,...comercio} = matchedData(req);
         
         // Modifico el comercio
-        const data = await comercioModel.findOneAndUpdate({_id: id}, comercio, {new: true}); 
+        const data = await comercioModel.findOneAndUpdate({cif:cifId}, comercio, {new: true}); 
+
+        if (!data){
+            handleHttpError(res,"Comercio no encontrado",404)
+        }
 
         res.status(200).json(data);
     }
@@ -88,11 +77,9 @@ const deleteComercio = async (req, res) => {
         const {cif} = matchedData(req)
         // Recibo el hard de la query y si es true, elimino el comercio de la base de datos, si no, solo lo marco como eliminado
         const hard = req.query.hard; 
-        const comercio = await comercioModel.findOne({cif});
         // Compruebo que el comercio exista
-        if (!comercio) {
-            res.status(400).json({error: "El comercio no existe"});
-            return;
+        if (!await comercioModel.findOne({cif})){
+            handleHttpError(res,"Comercio no encontrado",404)
         }
         // Elimino el comercio de la base de datos
         if (hard === "true") {

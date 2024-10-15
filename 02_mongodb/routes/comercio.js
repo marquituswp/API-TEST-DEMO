@@ -11,7 +11,7 @@ router.get("/:cif",validatorGetComercio, getComercioByCif)
 
 router.post("/",validatorCreateComercio, createComercio)
 
-router.put("/:id",validatorUpdateComercio, modifyComercio)
+router.put("/:cifId",validatorUpdateComercio, modifyComercio)
 
 router.delete("/:cif",validatorDeleteComercio, deleteComercio)
 

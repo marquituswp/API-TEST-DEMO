@@ -27,7 +27,7 @@ const validatorCreateComercio = [
 
 const validatorUpdateComercio = [
         
-    check("id").exists().notEmpty().isMongoId(),
+    check("cifId").exists().notEmpty().isLength({min:9, max:9}),
     check("name").optional().notEmpty(),
     check("cif").optional().notEmpty().isLength({min:9, max:9}),
     check("email").optional().notEmpty().isEmail(),

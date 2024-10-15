@@ -1,6 +1,8 @@
+// Validaciones para las rutas de la web
 const {check} = require("express-validator")
 const validateResults = require("../utils/handleValidator")
 
+// Validaciones para la ruta get web por id
 const validatorGetWeb = [
 
     check("id").exists().notEmpty().isMongoId(),
@@ -9,6 +11,7 @@ const validatorGetWeb = [
 
 ]
 
+// Validaciones para la ruta post para crear web
 const validatorCreateWeb = [
 
     check("city").exists().notEmpty(),
@@ -26,6 +29,7 @@ const validatorCreateWeb = [
     
 ]
 
+// Validaciones para la ruta put para actualizar web
 const validatorUpdateWeb = [
     
         check("id").exists().notEmpty().isMongoId(),
@@ -44,6 +48,7 @@ const validatorUpdateWeb = [
         
 ]
 
+// Validaciones para la ruta delete para borrar web
 const validatorDeleteWeb = [
 
     check("id").exists().notEmpty().isMongoId(),
@@ -52,6 +57,7 @@ const validatorDeleteWeb = [
 
 ]
 
+// Validaciones para la ruta patch para subir imagen
 const validatorUploadImage = [
 
     check("id").exists().notEmpty().isMongoId(),

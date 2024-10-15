@@ -1,6 +1,7 @@
 const { validationResult } = require("express-validator")
 const {handleHttpError} = require("../utils/handleError")
 
+// Validamos los resultados de las validaciones
 const validateResults = (req, res, next) => {
 
     try {

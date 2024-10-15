@@ -1,7 +1,7 @@
 const express= require("express")
 const {validatorCreateWeb,validatorDeleteWeb,validatorGetWeb,validatorUpdateWeb, validatorUploadImage} = require("../validators/web")
 const router = express.Router()
-const uploadMiddleware = require("../utils/handleStorage")
+const uploadMiddleware = require("../utils/handleUpload")
 const {getWebById,createWeb,updateWeb,deleteWeb,uploadImage} = require("../controllers/web")
 
 router.get("/:id",validatorGetWeb,getWebById)

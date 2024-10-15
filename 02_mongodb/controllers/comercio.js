@@ -77,14 +77,14 @@ const deleteComercio = async (req, res) => {
         if (!await comercioModel.findOne({cif})){
             handleHttpError(res,"Comercio no encontrado",404)
         }
-        // Elimino el comercio de la base de datos
+
         if (hard === "true") {
             // Elimino el comercio de forma física
             await comercioModel.findOneAndDelete({cif}); 
             res.status(200).json({message: "Comercio eliminado de forma física"})
         }
         else if (hard==="false"){
-            // Marco el comercio como eliminado, elimino de forma lógica
+            // Elimino el comercio de forma lógica
             await comercioModel.delete({cif}); 
             res.status(200).json({message: "Comercio eliminado de forma lógica"});
         }

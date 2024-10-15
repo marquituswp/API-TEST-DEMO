@@ -1,6 +1,8 @@
+// Objetivo: Validar los datos de entrada para los endpoints de comercio
 const {check} = require("express-validator")
 const valdateResults = require("../utils/handleValidator")
 
+// Validaciones para la ruta get comercio por cif
 const validatorGetComercio = [
         
     check("cif").exists().notEmpty().isLength({min:9, max:9}),
@@ -11,6 +13,7 @@ const validatorGetComercio = [
 
 ]
 
+// Validaciones para la ruta post para crear comercio
 const validatorCreateComercio = [
     
     check("name").exists().notEmpty(),
@@ -25,6 +28,7 @@ const validatorCreateComercio = [
 
 ]
 
+// Validaciones para la ruta put para actualizar comercio
 const validatorUpdateComercio = [
         
     check("cifId").exists().notEmpty().isLength({min:9, max:9}),
@@ -40,6 +44,7 @@ const validatorUpdateComercio = [
 
 ]
 
+// Validaciones para la ruta delete para borrar comercio
 const validatorDeleteComercio = [
         
     check("cif").exists().notEmpty().isLength({min:9, max:9}),

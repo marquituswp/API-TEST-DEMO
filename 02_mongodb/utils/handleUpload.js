@@ -17,6 +17,6 @@ const storage = multer.diskStorage({
 
 });
 
-const uploadMiddleware = multer({ storage }) //Middleware entre la ruta y el controlador
+const uploadMiddleware = multer({storage}) //Middleware entre la ruta y el controlador
 
 module.exports = uploadMiddleware

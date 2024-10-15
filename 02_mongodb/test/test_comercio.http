@@ -8,7 +8,7 @@ GET http://localhost:3000/comercio?order=asc
 ### Obtener un comercio por su cif
 GET http://localhost:3000/comercio/12345681A
 
-### Crear un comercio, para crear más de uno, hay que ir cambiando el cif ya que es unico
+### Crear un comercio
 POST http://localhost:3000/comercio
 Content-Type: application/json
 

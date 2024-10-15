@@ -24,13 +24,13 @@ const comercioSchema = new mongoose.Schema({
         required: true,
         unique: true
     },
-    // parámetro deleted para saber si el comercio ha sido eliminado o no (eliminación lógica)
+
 }, 
 {
     timestamps: true,
 });
 
-// Creo el modelo de la colección comercio y lo exporto
+// Creo el modelo de la colección comercio y lo exporto, añadiendo eliminación lógica
 comercioSchema.plugin(mongooseDelete,{overrideMethods: "all"})
 const comercioModel = mongoose.model("comercio", comercioSchema);
 

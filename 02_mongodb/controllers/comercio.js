@@ -1,5 +1,5 @@
 // Cargo el modelo de comercio de forma directa
-const comercioModel = require('../models/comercio');
+const {comercioModel} = require('../models');
 const {matchedData} = require("express-validator")
 const {handleHttpError} = require("../utils/handleError")
 
@@ -42,11 +42,7 @@ const createComercio = async (req, res) => {
         const comercio = matchedData(req);
         // Creo el comercio
         const data = await comercioModel.create(comercio); 
-        
-        if (!data){
-            handleHttpError(res,"Comercio no encontrado",404)
-        }
-
+    
         res.status(201).json(data);
     }
     catch (error) {

@@ -1,0 +1,62 @@
+###
+GET http://localhost:3000/web/670ea2858e797634d74e04ea
+
+###
+POST http://localhost:3000/web
+Content-Type: application/json
+
+{
+    "city": "Madrid",
+    "activity": "Running",
+    "title": "Running in Madrid",
+    "summary": "Running in Madrid is a great experience",
+    "texts": [ "Madrid is a great city", "Running is a great activity" ],
+    "images": [ "madrid.jpg", "running.jpg" ],
+    "reviews": 
+        { 
+            "scoring":5,
+            "points":5,
+            "review":"Great experience" 
+        }
+    
+}
+
+###
+PUT http://localhost:3000/web/670ea2858e797634d74e04ea
+Content-Type: application/json
+
+{
+    "city": "Madrid",
+    "activity": "Running",
+    "title": "Running in Madrid",
+    "summary": "Running in Madrid is a great experience",
+    "texts": [ "Madrid is a great city", "Running is a great activity" ],
+    "images": [ "madrid.jpg", "running.jpg" ],
+    "reviews": 
+        { 
+            "scoring":4,
+            "points":4,
+            "review":"Great experience" 
+        }
+    
+}
+
+###
+DELETE http://localhost:3000/web/670ea2858e797634d74e04ea?typeDelete=logical
+
+###
+DELETE http://localhost:3000/web/670ea2858e797634d74e04ea?typeDelete=physical
+
+###
+PATCH http://localhost:3000/web/670ea2858e797634d74e04ea HTTP/1.1
+Content-Type: multipart/form-data; boundary=Boundry
+
+--Boundry
+Content-Disposition: form-data; name="image"; filename="img.jpg"
+Content-Type: image/jpeg
+
+# para que sepa cual es el archivo
+< ./img.jpg 
+--Boundry--
+
+

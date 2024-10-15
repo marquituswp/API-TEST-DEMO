@@ -1,5 +1,5 @@
 const express = require("express")
-
+const {validatorCreateComercio,validatorGetComercio,validatorUpdateComercio,validatorDeleteComercio} = require("../validators/comercio")
 const router = express.Router()
 
 // Recibimos las funciones de los controladores y las usamos en las rutas
@@ -7,13 +7,13 @@ const { getComercios, getComercioByCif, createComercio,modifyComercio, deleteCom
 
 router.get("/", getComercios)
 
-router.get("/:cif", getComercioByCif)
+router.get("/:cif",validatorGetComercio, getComercioByCif)
 
-router.post("/", createComercio)
+router.post("/",validatorCreateComercio, createComercio)
 
-router.put("/:cif", modifyComercio)
+router.put("/:id",validatorUpdateComercio, modifyComercio)
 
-router.delete("/:cif", deleteComercio)
+router.delete("/:cif",validatorDeleteComercio, deleteComercio)
 
 module.exports = router
 

@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const mongooseDelete = require("mongoose-delete")
 // Defino el esquema de la colección comercio
 const comercioSchema = new mongoose.Schema({
     name: {
@@ -24,16 +25,13 @@ const comercioSchema = new mongoose.Schema({
         unique: true
     },
     // parámetro deleted para saber si el comercio ha sido eliminado o no (eliminación lógica)
-    deleted:{
-        type: Boolean,
-        default: false
-    }
 }, 
 {
     timestamps: true,
 });
 
 // Creo el modelo de la colección comercio y lo exporto
+comercioSchema.plugin(mongooseDelete,{overrideMethods: "all"})
 const comercioModel = mongoose.model("comercio", comercioSchema);
 
 module.exports = comercioModel 

@@ -6,7 +6,7 @@ GET http://localhost:3000/comercio?order=asc
 
 
 ### Obtener un comercio por su cif
-GET http://localhost:3000/comercio/12345677A
+GET http://localhost:3000/comercio/12345683A
 
 ### Crear un comercio, para crear más de uno, hay que ir cambiando el cif ya que es unico
 POST http://localhost:3000/comercio
@@ -14,26 +14,26 @@ Content-Type: application/json
 
 {
     "name": "comercio 1",
-    "cif": "12345677A",
+    "cif": "12345684A",
     "email": "comercio1@gmail.com",
     "phone": "123456789",
-    "page_id": "23900"
+    "page_id": "23804"
 }
 
 ### Actualizar un comercio a partir de su CIF
-PUT http://localhost:3000/comercio/12345670A
+PUT http://localhost:3000/comercio/670e76e862637a5ab4626f5d
 Content-Type: application/json
 
 {
-    "name": "Hola que tal",
+    "name": "Hola que tal estas",
     "cif": "12345670A",
     "email": "comercio1@gmail.com",
     "phone": "123456789",
-    "page_id": "23947" 
+    "page_id": "23943" 
 }
 
 ### Borrar un comercio a partir de su CIF borrado logico
-DELETE http://localhost:3000/comercio/12345677A?hard=false
+DELETE http://localhost:3000/comercio/12345670A?hard=false
 
 ### Borrar un comercio a partir de su CIF borrado fisico
-DELETE http://localhost:3000/comercio/12345677A?hard=true
+DELETE http://localhost:3000/comercio/12345683A?hard=true

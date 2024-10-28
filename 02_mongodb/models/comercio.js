@@ -14,6 +14,7 @@ const comercioSchema = new mongoose.Schema({
     email:{
         type: String,
         required: true,
+        unique: true
     },
     phone:{
         type: String,
@@ -32,7 +33,7 @@ const comercioSchema = new mongoose.Schema({
 
 // Creo el modelo de la colección comercio y lo exporto, añadiendo eliminación lógica
 comercioSchema.plugin(mongooseDelete,{overrideMethods: "all"})
-const comercioModel = mongoose.model("comercio", comercioSchema);
+const commerceModel = mongoose.model("comercio", comercioSchema);
 
-module.exports = comercioModel 
+module.exports = commerceModel 
 

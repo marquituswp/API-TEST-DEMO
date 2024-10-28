@@ -17,10 +17,10 @@ const webSchema = new mongoose.Schema(
             type:String
         },
         texts:{
-            type:Array
+            type:[String]
         },
         images:{
-            type:Array
+            type:[String]
         },
         reviews:{
             scoring:{
@@ -32,6 +32,11 @@ const webSchema = new mongoose.Schema(
             review:{
                 type:String
             }
+        },
+        cifCommerce:{
+            type:String,
+            unique: true,
+            default:"cif"
         }
     },
     {

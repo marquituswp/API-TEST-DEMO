@@ -1,8 +1,14 @@
 #MongoDB
 DB_URI = 
 
+#JWT
+JWT_SECRET = 
+
 #server
 PORT = 
 
 #PATCH images
 PUBLIC_URL =
+
+#Slack
+SLACK_WEBHOOK = 

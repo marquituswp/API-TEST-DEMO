@@ -1,7 +1,8 @@
 // Manejo de modelos de la base de datos
 const models ={
-    comercioModel : require("./comercio"),
-    webModel : require("./web")
+    commerceModel : require("./comercio"),
+    webModel : require("./web"),
+    userModel : require("./users")
 }
 
 module.exports = models

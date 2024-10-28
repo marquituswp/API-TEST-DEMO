@@ -1,17 +1,19 @@
-// Cargo el modelo de comercio de forma directa
-const {comercioModel} = require('../models');
+// Controladores de comercio
+const {commerceModel} = require('../models');
 const {matchedData} = require("express-validator")
 const {handleHttpError} = require("../utils/handleError")
+const {tokenSignCommerce} = require("../utils/handleJwt")
 
+// Función para obtener todos los comercios
 const getComercios = async (req, res) => {
     try {
         const order = req.query.order
         // Recibo el order de la query y lo uso en el sort, si order es true, ordeno por cif, si no, no ordeno
-        const data = await comercioModel.find({}).  
+        const data = await commerceModel.find({}).  
         sort(order ? {cif: 1} : {});
 
         if (!data){
-            handleHttpError(res,"No hay comercios",404)
+            handleHttpError(res,"NO_DATA",403)
         }
 
         res.status(200).json(data);
@@ -21,14 +23,15 @@ const getComercios = async (req, res) => {
     }
 }
 
+// Función para obtener un comercio por su cif
 const getComercioByCif = async (req, res) => {
     try {
         const {cif} = matchedData(req)
         // Busco el comercio por el cif
-        const data = await comercioModel.findOne({cif}); 
+        const data = await commerceModel.findOne({cif}); 
         // Compruebo que el comercio exista
         if (!data){
-            handleHttpError(res,"Comercio no encontrado",404)
+            handleHttpError(res,"COMMERCE_NOT_FOUND",403)
         }
         res.status(200).json(data);
     }
@@ -37,28 +40,36 @@ const getComercioByCif = async (req, res) => {
     }
 }
 
+// Función para crear un comercio
 const createComercio = async (req, res) => {
     try {
         const comercio = matchedData(req);
         // Creo el comercio
-        const data = await comercioModel.create(comercio); 
-    
-        res.status(201).json(data);
+        const dataCommerce = await commerceModel.create(comercio); 
+        
+        // Creo un token de comercio
+        const data = {
+            token : await tokenSignCommerce(dataCommerce),
+            commerce: dataCommerce
+        }
+
+        res.status(200).json(data);
     }
     catch (error) {
         handleHttpError(res,"ERROR_CREATE_COMERCIO",403)
     }
 }
 
+// Función para modificar un comercio
 const modifyComercio = async (req, res) => {
     try {
         const {cifId,...comercio} = matchedData(req);
         
         // Modifico el comercio
-        const data = await comercioModel.findOneAndUpdate({cif:cifId}, comercio, {new: true}); 
+        const data = await commerceModel.findOneAndUpdate({cif:cifId}, comercio, {new: true}); 
 
         if (!data){
-            handleHttpError(res,"Comercio no encontrado",404)
+            handleHttpError(res,"COMMERCE_NOT_FOUND",403)
         }
 
         res.status(200).json(data);
@@ -68,25 +79,33 @@ const modifyComercio = async (req, res) => {
     }
 }
 
+// Función para eliminar un comercio
 const deleteComercio = async (req, res) => {
     try {
         const {cif} = matchedData(req)
         // Recibo el hard de la query y si es true, elimino el comercio de la base de datos, si no, solo lo marco como eliminado
         const hard = req.query.hard; 
+        const hardLowerCase = hard.toLowerCase()
         // Compruebo que el comercio exista
-        if (!await comercioModel.findOne({cif})){
-            handleHttpError(res,"Comercio no encontrado",404)
+        if (!await commerceModel.findOne({cif})){
+            handleHttpError(res,"COMMERCE_NOT_FOUND",403)
         }
 
-        if (hard === "true") {
+        if (hardLowerCase === "true") {
             // Elimino el comercio de forma física
-            await comercioModel.findOneAndDelete({cif}); 
-            res.status(200).json({message: "Comercio eliminado de forma física"})
+            await commerceModel.findOneAndDelete({cif}); 
+            res.status(200).json({message: "COMMERCE_DELETED_PHISICALY"})
         }
-        else if (hard==="false"){
+        else if (hardLowerCase==="false"){
             // Elimino el comercio de forma lógica
-            await comercioModel.delete({cif}); 
-            res.status(200).json({message: "Comercio eliminado de forma lógica"});
+            await commerceModel.delete({cif}); 
+            res.status(200).json({message: "COMMERCE_DELETED_LOGICALY"});
+        } else if (!hardLowerCase){
+            handleHttpError(res,"NO_HARD_VALUE",403)
+            return
+        } else{
+            handleHttpError(res,"INVALID_HARD_VALUE",403)
+            return
         }
          
     }

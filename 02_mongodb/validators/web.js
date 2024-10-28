@@ -15,7 +15,7 @@ const validatorGetWeb = [
 const validatorCreateWeb = [
 
     check("city").exists().notEmpty(),
-    check("activity").exists().notEmpty(),
+    check("activity").exists().notEmpty().toLowerCase(),
     check("title").exists().notEmpty(),
     check("summary").exists().notEmpty(),
     check("texts").exists().notEmpty().isArray(),
@@ -24,6 +24,7 @@ const validatorCreateWeb = [
     check("reviews.scoring").exists().notEmpty().isNumeric().custom(value => value >= 0 && value <= 5),
     check("reviews.points").exists().notEmpty().isNumeric(),
     check("reviews.review").exists().notEmpty(),
+    check("cifCommerce").optional().notEmpty(),
 
     validateResults
     
@@ -34,7 +35,7 @@ const validatorUpdateWeb = [
     
         check("id").exists().notEmpty().isMongoId(),
         check("city").optional().notEmpty(),
-        check("activity").optional().notEmpty(),
+        check("activity").optional().notEmpty().toLowerCase(),
         check("title").optional().notEmpty(),
         check("summary").optional().notEmpty(),
         check("texts").optional().notEmpty().isArray(),

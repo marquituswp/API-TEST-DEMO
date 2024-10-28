@@ -1,25 +1,42 @@
+// App principal de la API
 const express = require("express")
-
+const morganBody = require("morgan-body")
 const cors = require("cors")
 
 require('dotenv').config();
-
+// Importamos el stream del logger, para documentar en swagger y la configuración de la base de datos
+const loggerStream = require("./utils/handleLogger.js")
+const swaggerUi = require("swagger-ui-express")
+const swaggerDocs = require("./docs/swagger.js")
 const app = express()
 const dbConnect = require("./config/mongo.js")
 
+// Middleware para el manejo de errores
 app.use(cors())
 app.use(express.json())
-
+// Middleware para la documentación de la API en Swagger
+app.use("/swagger", swaggerUi.serve,swaggerUi.setup(swaggerDocs))
 // Uso las rutas de routes/index.js, que a su vez usa las rutas de los archivos en routes/
 app.use("/", require("./routes"))
+// Middleware para servir archivos estáticos
 app.use(express.static("storage"))
 
-const port = process.env.PORT || 3000
+dbConnect()
 
-app.listen(port, () => {  
+// Configuración de morgan para documentar las peticiones en el logger
+morganBody(app, {
 
-    console.log("Servidor escuchando en el puerto " + port) 
+    noColors: true, //limpiamos el String de datos lo máximo posible antes de mandarlo a Slack
+
+    skip: function (req, res) { //Solo enviamos errores (4XX de cliente y 5XX de servidor)
+
+        console.log(res.statusCode)
+        return res.statusCode < 500
+
+    },
+
+    stream: loggerStream
 
 })
 
-dbConnect()
+module.exports = app

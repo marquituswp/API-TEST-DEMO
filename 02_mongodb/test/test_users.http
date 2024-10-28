@@ -1,0 +1,31 @@
+GET http://localhost:3000/users
+
+###
+PUT http://localhost:3000/users/671b7c8836b46f2c48b41454
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NzFiN2M4ODM2YjQ2ZjJjNDhiNDE0NTQiLCJyb2xlIjpbInVzZXIiXSwiaWF0IjoxNzI5ODU1MzkzLCJleHAiOjE3Mjk5NDE3OTN9.UN8UoL8j1uTJnYWIAA5uXsS_YAy9WHCJEU70YZ00t6Q
+Content-Type: application/json
+
+{
+    "name": "John Doe",
+    "email": "user35@test.com",
+    "password": "1234567890",
+    "age": 35,
+    "city": "New York",
+    "interests": ["music", "sports"],
+    "allowOffers": true
+}
+
+###
+PUT http://localhost:3000/users/role
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NzFiN2M4ODM2YjQ2ZjJjNDhiNDE0NTQiLCJyb2xlIjpbInVzZXIiXSwiaWF0IjoxNzI5ODU1MzkzLCJleHAiOjE3Mjk5NDE3OTN9.UN8UoL8j1uTJnYWIAA5uXsS_YAy9WHCJEU70YZ00t6Q
+Content-Type: application/json
+
+{
+    "email": "user36@test.com",
+    "role": ["admin"]
+}
+
+
+###
+DELETE http://localhost:3000/users/671b7cc33a397f1b188b3781
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NzFiN2M4ODM2YjQ2ZjJjNDhiNDE0NTQiLCJyb2xlIjpbInVzZXIiXSwiaWF0IjoxNzI5ODU1MzkzLCJleHAiOjE3Mjk5NDE3OTN9.UN8UoL8j1uTJnYWIAA5uXsS_YAy9WHCJEU70YZ00t6Q

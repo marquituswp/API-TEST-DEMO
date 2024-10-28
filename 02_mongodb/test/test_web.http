@@ -1,8 +1,16 @@
+### Obtener webs
+GET http://localhost:3000/web
+
 ### Obtener web por id
-GET http://localhost:3000/web/670ea2858e797634d74e04ea
+GET http://localhost:3000/web/671bcfd3857881e71bd1e30b
+
+### Obtener users de una web
+GET http://localhost:3000/web/users
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjaWYiOiIxMjM0NTY3OEEiLCJpYXQiOjE3MzAwMzI1OTEsImV4cCI6MTczMDExODk5MX0.CdgojHipi95dv8JDBHQcMSO5ZNIws2kxLKF45wRVg_Y
 
 ### Crear web
 POST http://localhost:3000/web
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjaWYiOiIxMjM0NTY3OEEiLCJpYXQiOjE3MzAwMzI1OTEsImV4cCI6MTczMDExODk5MX0.CdgojHipi95dv8JDBHQcMSO5ZNIws2kxLKF45wRVg_Y
 Content-Type: application/json
 
 {
@@ -10,8 +18,8 @@ Content-Type: application/json
     "activity": "Running",
     "title": "Running in Madrid",
     "summary": "Running in Madrid is a great experience",
-    "texts": [ "Madrid is a great city", "Running is a great activity" ],
-    "images": [ "madrid.jpg", "running.jpg" ],
+    "texts": ["Madrid is a great city", "Running is a great activity"],
+    "images": ["madrid.jpg", "running.jpg"],
     "reviews": 
         { 
             "scoring":5,
@@ -22,7 +30,8 @@ Content-Type: application/json
 }
 
 ### Actualizar web
-PUT http://localhost:3000/web/670ea2858e797634d74e04ea
+PUT http://localhost:3000/web/671bcfd3857881e71bd1e30b
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjaWYiOiIxMjM0NTY4NUEiLCJpYXQiOjE3Mjk4NzUzODEsImV4cCI6MTcyOTk2MTc4MX0.4CVuiQmiKjXLvRlsHnOKuT37hzTNi-rhBh3MOZNW4eU
 Content-Type: application/json
 
 {
@@ -42,13 +51,16 @@ Content-Type: application/json
 }
 
 ### Archivar web
-DELETE http://localhost:3000/web/670ea2858e797634d74e04ea?typeDelete=logical
+DELETE http://localhost:3000/web/671bcfd3857881e71bd1e30b?hard=false
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjaWYiOiIxMjM0NTY4NEEiLCJpYXQiOjE3Mjk4NzIwNDksImV4cCI6MTcyOTk1ODQ0OX0.RR39qdTyJu5bYxh4y0i_GTUuD20Lw1gg-fp7QIiJ1SE
 
 ### Borrar web
-DELETE http://localhost:3000/web/670ea2858e797634d74e04ea?typeDelete=physical
+DELETE http://localhost:3000/web/671bcfd3857881e71bd1e30b?hard=true
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjaWYiOiIxMjM0NTY4NEEiLCJpYXQiOjE3Mjk4NzIwNDksImV4cCI6MTcyOTk1ODQ0OX0.RR39qdTyJu5bYxh4y0i_GTUuD20Lw1gg-fp7QIiJ1SE
 
 ### Subir imagen a array de imagenes de la web
-PATCH http://localhost:3000/web/670ea2858e797634d74e04ea HTTP/1.1
+PATCH http://localhost:3000/web/671bcfd3857881e71bd1e30b HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjaWYiOiIxMjM0NTY4NUEiLCJpYXQiOjE3Mjk4NzUzODEsImV4cCI6MTcyOTk2MTc4MX0.4CVuiQmiKjXLvRlsHnOKuT37hzTNi-rhBh3MOZNW4eU
 Content-Type: multipart/form-data; boundary=Boundry
 
 --Boundry
@@ -56,7 +68,7 @@ Content-Disposition: form-data; name="image"; filename="img.jpg"
 Content-Type: image/jpeg
 
 # para que sepa cual es el archivo
-< ./img.jpg 
+<./img.jpg 
 --Boundry--
 
 

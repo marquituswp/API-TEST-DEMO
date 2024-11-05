@@ -8,7 +8,7 @@ const authUser = async (req,res,next) => {
     try{
         // Comprobamos si existe la cabecera de autorización
         if (!req.headers.authorization){
-            handleHttpError(res,"NOT_AUTH_TOKEN",403)
+            handleHttpError(res,"NOT_AUTH_TOKEN",404)
             return
         }
 

@@ -9,13 +9,13 @@ const checkRolUser = (roles) => (req,res,next) =>{
         const checkRolValue = roles.includes(userRol)
 
         if(!checkRolValue){
-            handleHttpError(res,"USER_NOT_ALLOWED",403)
+            handleHttpError(res,"USER_NOT_ALLOWED",400)
             return
         }
 
         next()
     }catch(error){
-        handleHttpError(res,"ERROR_CHECKING_ROLE",403)
+        handleHttpError(res,"ERROR_CHECKING_ROLE",401)
     }
 }
 

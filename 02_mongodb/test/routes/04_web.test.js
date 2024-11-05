@@ -63,7 +63,48 @@ describe("Web", () =>{
             .expect(200)
     })
 
-    // Test para borrar una web por ID
+    // Test para obtener las webs de un usuario por ciudad
+    it("Should get the the Webs in the User city", async () =>{
+        await request(app)
+            .get("/users/web/cityTest/activityTest")
+            .expect(200)
+    })
+
+    // Test para obtener las webs de un usuario por ciudad ordenadas
+    it("Should get the the Webs in the User city ordered", async () =>{
+        await request(app)
+            .get("/users/web/cityTest/activityTest?order=true")
+            .expect(200)
+    })
+
+    // Test para hacer una review a una web
+    it("Should review a web", async () =>{
+        const response = await request(app)
+            .put("/users/reviewWeb/"+webId)
+            .set('Authorization', `Bearer ${globalTestConfig.token_own}`) // Se necesita autorización de usuario (el usuario ha de estar interesado en la web)
+            .send({"scoring":4.5,"points":100,"review":"reviewTest"})
+            .expect(200)
+        expect(response.body.web.reviews[0].scoring).toEqual(4.5)
+    })
+
+    // Test para borrar una web por ID lógicamente
+    it("Should delete a web by ID logically", async () =>{
+        await request(app)
+            .delete("/web/"+webId)
+            .set('Authorization', `Bearer ${globalTestConfig.token_commerce}`) // Se necesita autorización de comercio (la web pertenece a un comercio)
+            .query({"hard":false})
+            .expect(200)
+    })
+
+    // Test para restaurar una web por ID
+    it("Should restore a web by ID", async () =>{
+        await request(app)
+            .patch("/web/restore/"+webId)
+            .set('Authorization', `Bearer ${globalTestConfig.token_commerce}`) // Se necesita autorización de comercio (la web pertenece a un comercio)
+            .expect(200)
+    })
+
+    // Test para borrar una web por ID físicamente
     it("Should delete a web by ID phisicaly", async () =>{
         await request(app)
             .delete("/web/"+webId)
@@ -72,7 +113,22 @@ describe("Web", () =>{
             .expect(200)
     })
 
-    
+    // Test para borrar un comercio por CIF lógicamente
+    it("Should delete a commerce by CIF logically", async () =>{
+        await request(app)
+            .delete(`/comercio/${globalTestConfig.commerce_cif}`)
+            .set('Authorization', `Bearer ${globalTestConfig.token_admin}`) // Se necesita autorización (no hace falta ser admin)
+            .query({"hard":false})
+            .expect(200)
+    })
+
+    // Test para restaurar un comercio por CIF
+    it("Should restore a commerce by CIF", async () =>{
+        await request(app)
+            .patch(`/comercio/restore/${globalTestConfig.commerce_cif}`)
+            .set('Authorization', `Bearer ${globalTestConfig.token_admin}`) // Se necesita autorización (no hace falta ser admin)
+            .expect(200)
+    })
 
     // Test para borrar un comercio por CIF
     it("Should delete a commerce by CIF phisicaly", async () =>{

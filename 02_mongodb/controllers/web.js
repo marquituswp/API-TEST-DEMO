@@ -126,16 +126,53 @@ const deleteWeb = async (req,res) =>{
     
 }
 
+// Función para restaurar una web
+const restoreWeb = async (req,res) =>{
+    try{
+        const {id} = matchedData(req)
+        // Comprobamos si la web ha sido eliminada
+        const data = await webModel.findById({_id:id})
+        if(!data){
+            // Si ha sido eliminada, la restauramos
+            const webRestored = await webModel.restore({_id:id})
+            // Comprobamos si la web ha sido restaurada
+            if(webRestored.modifiedCount === 1){
+                // Comprobamos si el cif de la web coincide con el del comercio
+                const web = await webModel.findOne({cifCommerce:req.commerce.cif})
+                if(web.cifCommerce !== req.commerce.cif){
+                    // Si no coincide, lanzamos un error
+                    handleHttpError(res,"CAN'T_RESTORE_OTHERS",403)
+                    await webModel.delete({_id:id})
+                    return
+                }
+                // Si coincide, devolvemos la web restaurada
+                res.status(200).json({message:"WEB_RESTORED", web:web})
+                return
+            }
+            handleHttpError(res,"WEB_NOT_EXISTENT",403)
+            return
+        }
+        handleHttpError(res,"WEB_NOT_DELETED",403)
+        return
+    
+    }catch(error){
+        handleHttpError(res,"ERROR_RESTORE_WEB",403)
+    }
+}
+
 // Función para subir una imagen a una web
 const uploadImage = async (req,res) =>{
     try{
         const {id} = req.params
         const {file} = req
+        if(!file){
+            handleHttpError(res,"NO_FILE",403)
+            return
+        }
         //creamos la url de la imagen
         const url = process.env.PUBLIC_URL + "/" + file.filename
         //Comprobamos si la web existe
         const data = await webModel.findById({_id:id})
-        
         if(!data){
             handleHttpError(res,"WEB_NOT_FOUND",403)
             return
@@ -149,12 +186,21 @@ const uploadImage = async (req,res) =>{
 
         // Extraemos el array de imágenes de la web
         const images_url = data.images
-    
+        const textsData = data.texts
         //Añadimos la nueva imagen al array
         images_url.push(url)
-    
+        //Si se añade un texto, lo añadimos al array de textos
+        if(req.body.text){
+            //Añadimos cada texto dentro del array de req.body.text al array de textos de la web
+            const texts = req.body.text.split(",")
+            texts.forEach(text => {
+                textsData.push(text)
+            });
+            
+            console.log(textsData)
+        }
         //Actualizamos la web con la nueva imagen
-        const dataUpdated = await webModel.findOneAndUpdate({_id:id},{images:images_url},{new:true})
+        const dataUpdated = await webModel.findOneAndUpdate({_id:id},{images:images_url , texts:textsData},{new:true})
 
         res.status(200).json(dataUpdated)
     }
@@ -196,5 +242,5 @@ const getUsersWeb = async (req,res)=>{
 
 
 module.exports={
-    getWebById,createWeb,updateWeb,deleteWeb,uploadImage,getWebs,getUsersWeb
+    getWebById,createWeb,updateWeb,deleteWeb,uploadImage,getWebs,getUsersWeb,restoreWeb
 }

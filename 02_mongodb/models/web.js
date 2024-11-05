@@ -23,14 +23,20 @@ const webSchema = new mongoose.Schema(
             type:[String]
         },
         reviews:{
-            scoring:{
-                type:Number
-            },
-            points:{
-                type:Number
-            },
-            review:{
-                type:String
+            type:[Object],
+            properties:{
+                scoring:{
+                    type:Number,
+                    default:0
+                },
+                points:{
+                    type:Number,
+                    default:0
+                },
+                review:{
+                    type:String,
+                    default:"review"
+                }
             }
         },
         cifCommerce:{

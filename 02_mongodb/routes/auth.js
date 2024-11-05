@@ -16,12 +16,20 @@ const {registerUser,loginUser} = require("../controllers/auth")
 *           content:
 *               application/json:
 *                   schema:
-*                       $ref: "#/components/schemas/user"
+*                       $ref: "#/components/schemas/Auth"
 *       responses:
 *           '200':
 *               description: Return a User registered with its token
-*           '304':
+*               content:
+*                   application/json:
+*                       schema:
+*                           $ref: "#/components/schemas/Auth/authResponse"
+*           '403':
 *               description: Error registering User
+*               content:
+*                   application/json:
+*                       schema:
+*                           $ref: "#/components/schemas/Errors/auth"
 */
 router.post("/register",validateRegisterUser,registerUser)
 
@@ -37,12 +45,20 @@ router.post("/register",validateRegisterUser,registerUser)
 *           content:
 *               application/json:
 *                   schema:
-*                       $ref: "#/components/schemas/login"
+*                       $ref: "#/components/schemas/Auth/login"
 *       responses:
 *           '200':
 *               description: Return a User registered with its token
-*           '304':
-*               description: Error registering User
+*               content:
+*                   application/json:
+*                       schema:
+*                           $ref: "#/components/schemas/Auth/authResponse"
+*           '403':
+*               description: Error login User
+*               content:
+*                   application/json:
+*                       schema:
+*                           $ref: "#/components/schemas/Errors/login"
 */
 router.post("/login",validateLoginUser,loginUser)
 

@@ -1,5 +1,5 @@
 // Controladores de comercio
-const {commerceModel} = require('../models');
+const {commerceModel,webModel} = require('../models');
 const {matchedData} = require("express-validator")
 const {handleHttpError} = require("../utils/handleError")
 const {tokenSignCommerce} = require("../utils/handleJwt")
@@ -10,7 +10,7 @@ const getComercios = async (req, res) => {
         const order = req.query.order
         // Recibo el order de la query y lo uso en el sort, si order es true, ordeno por cif, si no, no ordeno
         const data = await commerceModel.find({}).  
-        sort(order ? {cif: 1} : {});
+        sort(order==="true" ? {cif: 1} : {});
 
         if (!data){
             handleHttpError(res,"NO_DATA",403)
@@ -93,12 +93,14 @@ const deleteComercio = async (req, res) => {
 
         if (hardLowerCase === "true") {
             // Elimino el comercio de forma física
-            await commerceModel.findOneAndDelete({cif}); 
+            await commerceModel.findOneAndDelete({cif})
+            await webModel.findOneAndDelete({cifCommerce:cif})
             res.status(200).json({message: "COMMERCE_DELETED_PHISICALY"})
         }
         else if (hardLowerCase==="false"){
             // Elimino el comercio de forma lógica
-            await commerceModel.delete({cif}); 
+            await commerceModel.delete({cif})
+            await webModel.delete({cifCommerce:cif})
             res.status(200).json({message: "COMMERCE_DELETED_LOGICALY"});
         } else if (!hardLowerCase){
             handleHttpError(res,"NO_HARD_VALUE",403)
@@ -114,9 +116,30 @@ const deleteComercio = async (req, res) => {
     }
 }
 
+// Función para restaurar un comercio
+const restoreComercio = async (req, res) => {
+    try {
+        const {cif} = matchedData(req)
+        // Restauro el comercio
+        const commerce = await commerceModel.restore({cif}); 
+        if (commerce.modifiedCount === 1){
+            const commerceRestored = await commerceModel.findOne({cif});
+            res.status(200).json({message: "COMMERCE_RESTORED", commerceRestored});
+            return
+        }
+        else{
+            handleHttpError(res,"COMMERCE_NOT_FOUND",403)
+            return
+        }
+    }
+    catch (error) {
+        handleHttpError(res,"ERROR_RESTORE_COMERCIO",403)
+    }
+}
+
 // Exporto los métodos
 module.exports = {
     getComercios, getComercioByCif,
     createComercio, modifyComercio,
-    deleteComercio
+    deleteComercio, restoreComercio
 };

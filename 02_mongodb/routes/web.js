@@ -1,11 +1,11 @@
 // Rutas de web
 const express= require("express")
-const {validatorCreateWeb,validatorDeleteWeb,validatorGetWeb,validatorUpdateWeb} = require("../validators/web")
+const {validatorCreateWeb,validatorDeleteWeb,validatorGetWeb,validatorUpdateWeb,validatorRestoreWeb} = require("../validators/web")
 const router = express.Router()
 const uploadMiddleware = require("../utils/handleUpload")
 // Importamos el middleware de autenticación de comercio, solo los comercios pueden acceder a sus webs
 const {authCommerce} = require("../middlewares/session")
-const {getWebs,getWebById,createWeb,updateWeb,deleteWeb,uploadImage,getUsersWeb} = require("../controllers/web")
+const {getWebs,getWebById,createWeb,updateWeb,deleteWeb,uploadImage,getUsersWeb,restoreWeb} = require("../controllers/web")
 
 // RUTA GET /web
 /**
@@ -18,8 +18,16 @@ const {getWebs,getWebById,createWeb,updateWeb,deleteWeb,uploadImage,getUsersWeb}
 *       responses:
 *           '200':
 *               description: Return all Webs
-*           '304':
+*               content:
+*                   application/json:
+*                       schema:
+*                           $ref: "#/components/schemas/Web/WebCreated"
+*           '403':
 *               description: Error getting Webs
+*               content:
+*                   application/json:
+*                       schema:
+*                           $ref: "#/components/schemas/Errors/WebCreated"
 */
 router.get("/",getWebs)
 
@@ -36,8 +44,22 @@ router.get("/",getWebs)
 *       responses:
 *           '200':
 *               description: Return the Users interested in the Commerce Web
-*           '304':
-*               description: Error getting Usersç
+*               content:
+*                   application/json:
+*                       schema:
+*                           $ref: "#/components/schemas/Web/WebUsers"
+*           '403':
+*               description: Error getting Users
+*               content:
+*                   application/json:
+*                       schema:
+*                           $ref: "#/components/schemas/Errors/WebUsers"
+*           '404':
+*               description: Error checking the role
+*               content:
+*                   application/json:
+*                       schema:
+*                           $ref: "#/components/schemas/Errors/NotToken"
 */
 router.get("/users",authCommerce,getUsersWeb)
 
@@ -59,8 +81,16 @@ router.get("/users",authCommerce,getUsersWeb)
 *       responses:
 *           '200':
 *               description: Return the Web info
-*           '304':
+*               content:
+*                   application/json:
+*                       schema:
+*                           $ref: "#/components/schemas/Web/WebCreated"
+*           '403':
 *               description: Error getting Web
+*               content:
+*                   application/json:
+*                       schema:
+*                           $ref: "#/components/schemas/Errors/WebCreated"
 */
 router.get("/:id",validatorGetWeb,getWebById)
 
@@ -79,12 +109,26 @@ router.get("/:id",validatorGetWeb,getWebById)
 *           content:
 *               application/json:
 *                   schema:
-*                       $ref: "#/components/schemas/web"
+*                       $ref: "#/components/schemas/Web"
 *       responses:
 *           '200':
 *               description: Return the new Web created
-*           '304':
+*               content:
+*                   application/json:
+*                       schema:
+*                           $ref: "#/components/schemas/Web/WebCreated"
+*           '403':
 *               description: Error creating Web
+*               content:
+*                   application/json:
+*                       schema:
+*                           $ref: "#/components/schemas/Errors/CreateWeb"
+*           '404':
+*               description: Error checking the role
+*               content:
+*                   application/json:
+*                       schema:
+*                           $ref: "#/components/schemas/Errors/NotToken"
 */
 router.post("/",authCommerce,validatorCreateWeb,createWeb)
 
@@ -110,12 +154,26 @@ router.post("/",authCommerce,validatorCreateWeb,createWeb)
 *           content:
 *               application/json:
 *                   schema:
-*                       $ref: "#/components/schemas/web"
+*                       $ref: "#/components/schemas/Web/Updateweb"
 *       responses:
 *           '200':
 *               description: Return the new Web info
-*           '304':
+*               content:
+*                   application/json:
+*                       schema:
+*                           $ref: "#/components/schemas/Web/WebCreated"
+*           '403':
 *               description: Error updating Web
+*               content:
+*                   application/json:
+*                       schema:
+*                           $ref: "#/components/schemas/Errors/UpdateWeb"
+*           '404':
+*               description: Error checking the role
+*               content:
+*                   application/json:
+*                       schema:
+*                           $ref: "#/components/schemas/Errors/NotToken"
 */
 router.put("/:id",authCommerce,validatorUpdateWeb,updateWeb)
 
@@ -140,15 +198,29 @@ router.put("/:id",authCommerce,validatorUpdateWeb,updateWeb)
 *           - in: query
 *             name: hard
 *             schema:
-*                type: string
-*                example: true/false
+*               type: string
+*               enum: ["true","false"]
 *             required: true
-*             description: Type of delete
+*             description: Choose "hard" to delete phisicaly or "false" to soft delete 
 *       responses:
 *           '200':
 *               description: Return a delete message info
-*           '304':
+*               content:
+*                   application/json:
+*                       schema:
+*                           $ref: "#/components/schemas/Web/WebDelete"
+*           '403':
 *               description: Error deleting Web
+*               content:
+*                   application/json:
+*                       schema:
+*                           $ref: "#/components/schemas/Errors/WebDelete"
+*           '404':
+*               description: Error checking the role
+*               content:
+*                   application/json:
+*                       schema:
+*                           $ref: "#/components/schemas/Errors/NotToken"
 */
 router.delete("/:id",authCommerce,validatorDeleteWeb,deleteWeb)
 
@@ -159,8 +231,8 @@ router.delete("/:id",authCommerce,validatorDeleteWeb,deleteWeb)
 *   patch:
 *       tags:
 *       - Web
-*       summary: Upload an image to the Web
-*       description: Upload an image to the Commerce Web, the Commerce Token is required
+*       summary: Upload an image or text to the Web
+*       description: Upload an image or text to the Commerce Web, the Commerce Token is required
 *       security:
 *           - bearerAuth: []
 *       parameters:
@@ -180,14 +252,71 @@ router.delete("/:id",authCommerce,validatorDeleteWeb,deleteWeb)
 *                   type: string
 *                   format: binary
 *                   description: The image file to upload
+*                 text:
+*                   type: array
+*                   description: The text to upload
 *             required:
 *               - image
 *       responses:
 *           '200':
 *               description: Return the Web info with the new image uploaded
-*           '304':
+*               content:
+*                   application/json:
+*                       schema:
+*                           $ref: "#/components/schemas/Web/WebCreated"
+*           '403':
 *               description: Error uploading image
+*               content:
+*                   application/json:
+*                       schema:
+*                           $ref: "#/components/schemas/Errors/WebUpload"
+*           '404':
+*               description: Error checking the role
+*               content:
+*                   application/json:
+*                       schema:
+*                           $ref: "#/components/schemas/Errors/NotToken"
 */
 router.patch("/:id",authCommerce,uploadMiddleware.single("image"),uploadImage)
+
+// RUTA PATCH /web/restore/{id}
+/**
+*   @openapi
+*   /web/restore/{id}:
+*   patch:
+*       tags:
+*       - Web
+*       summary: Restore a Web by ID
+*       description: Restore a Commerce Web by its ID, the Commerce Token is required
+*       security:
+*           - bearerAuth: []
+*       parameters:
+*           - in: path
+*             name: id
+*             schema: 
+*                type: string
+*             required: true
+*             description: The ID of the Web
+*       responses:
+*           '200':
+*               description: Return the Web info restored
+*               content:
+*                   application/json:
+*                       schema:
+*                           $ref: "#/components/schemas/Web/WebRestored"
+*           '403':
+*               description: Error restoring Web
+*               content:
+*                   application/json:
+*                       schema:
+*                           $ref: "#/components/schemas/Errors/WebRestored"
+*           '404':
+*               description: Error checking the role
+*               content:
+*                   application/json:
+*                       schema:
+*                           $ref: "#/components/schemas/Errors/NotToken"
+*/
+router.patch("/restore/:id",authCommerce,validatorRestoreWeb,restoreWeb)
 
 module.exports = router

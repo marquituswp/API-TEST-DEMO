@@ -36,5 +36,27 @@ const validateUpdateRole = [
     }
 ]
 
+// Validamos los datos de la ruta get web
+const validateGetWeb = [
+    check("city").exists().notEmpty(),
+    check("interests").optional().notEmpty(),
+    check("order").optional().notEmpty(),
 
-module.exports = {validateUpdateUser, validateDeleteUser,validateUpdateRole}
+    (req, res, next) => {
+        return validateResults(req, res, next)
+    }
+]
+
+// Validamos los datos de la ruta post para crear review
+const validateReviewWeb =[
+    check("webId").exists().notEmpty().isMongoId(),
+    check("scoring").exists().notEmpty().isNumeric().custom(value => value >= 0 && value <= 5),
+    check("points").exists().notEmpty().isNumeric(),
+    check("review").exists().notEmpty(),
+    (req, res, next) => {
+        return validateResults(req, res, next)
+    }
+]
+
+
+module.exports = {validateUpdateUser, validateDeleteUser,validateUpdateRole,validateGetWeb,validateReviewWeb}

@@ -1,6 +1,6 @@
 // Objetivo: Validar los datos de entrada para los endpoints de comercio
 const {check} = require("express-validator")
-const valdateResults = require("../utils/handleValidator")
+const validateResults = require("../utils/handleValidator")
 
 // Validaciones para la ruta get comercio por cif
 const validatorGetComercio = [
@@ -8,7 +8,7 @@ const validatorGetComercio = [
     check("cif").exists().notEmpty().isLength({min:9, max:9}),
 
     (req,res,next) => {
-        return valdateResults(req,res,next)
+        return validateResults(req,res,next)
     }
 
 ]
@@ -23,7 +23,7 @@ const validatorCreateComercio = [
     check("page_id").exists().notEmpty().isInt(),
 
     (req,res,next) => {
-        return valdateResults(req,res,next)
+        return validateResults(req,res,next)
     }
 
 ]
@@ -39,7 +39,7 @@ const validatorUpdateComercio = [
     check("page_id").optional().notEmpty().isInt(),
 
     (req,res,next) => {
-        return valdateResults(req,res,next)
+        return validateResults(req,res,next)
     }
 
 ]
@@ -50,7 +50,18 @@ const validatorDeleteComercio = [
     check("cif").exists().notEmpty().isLength({min:9, max:9}),
 
     (req,res,next) => {
-        return valdateResults(req,res,next)
+        return validateResults(req,res,next)
+    }
+
+]
+
+// Validaciones para la ruta patch para restaurar comercio
+const validatorRestoreCommerce = [
+            
+    check("cif").exists().notEmpty().isLength({min:9, max:9}),
+
+    (req,res,next) => {
+        return validateResults(req,res,next)
     }
 
 ]
@@ -59,5 +70,6 @@ module.exports = {
     validatorCreateComercio,
     validatorUpdateComercio,
     validatorDeleteComercio,
-    validatorGetComercio
+    validatorGetComercio,
+    validatorRestoreCommerce
 }

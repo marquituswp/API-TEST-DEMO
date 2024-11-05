@@ -1,5 +1,6 @@
 // Controladores de usuarios
-const {userModel} = require("../models")
+const {userModel,webModel} = require("../models")
+const web = require("../models/web")
 const {handleHttpError} = require("../utils/handleError")
 const {encrypt} = require("../utils/handlePassword")
 const {matchedData} = require("express-validator")
@@ -75,4 +76,64 @@ const modifyUserRole = async (req,res)=>{
     }
 }
 
-module.exports = {getUsers,modifyUsers,deleteUser,modifyUserRole}
+// Función para obtener los comercios de una ciudad
+const getWebCity = async (req,res) =>{
+    try{
+        const {city,interests} = matchedData(req)
+        const order = req.query.order
+        const webs = await webModel.find({city})
+        // Compruebo que haya comercios en la ciudad
+        if(!webs){
+            handleHttpError(res,"NO_COMMERCES",403)
+            return
+        }
+        // Si no se especifican intereses, devuelvo todos los comercios de la ciudad
+        if({interests}){
+            // Si se especifican intereses, devuelvo los comercios que coincidan con esos intereses
+            if (order === "true") {
+                // Ordenar de mayor a menor en base a `reviews.scoring`
+                webs.sort((a, b) => b.reviews.scoring - a.reviews.scoring);
+              }
+            res.status(200).json(webs)
+            
+        }else{
+            const websInterests = await webModel.find({city:city,activity:interests})
+            if (order === "true") {
+                // Ordenar de mayor a menor en base a `reviews.scoring`
+                websInterests.sort((a, b) => b.reviews.scoring - a.reviews.scoring);
+              }
+            res.status(200).json(websInterests)
+        }
+        
+    }catch(error){
+        handleHttpError(res,"ERROR_GETTING_COMMERCES_CITY",403)
+    }
+}
+
+// Función para añadir una review a una web
+const reviewWeb = async (req,res) => {
+    try{
+        const {webId,scoring,points,review} = matchedData(req)
+        const web = await webModel.findById({_id:webId})
+        // Compruebo que la web existe
+        if(!web){
+            handleHttpError(res,"WEB_NOT_FOUND",403)
+        }
+        // Añado la review a la web
+        const reviews_data = web.reviews
+        // Creo un objeto con la review y lo añado al array de reviews
+        const data = {
+            scoring:scoring,
+            points:points,
+            review:review
+        }
+        reviews_data.push(data)
+        const webReviewed = await webModel.findByIdAndUpdate({_id:webId},{reviews:reviews_data},{new:true})
+        res.status(200).json({message: "Web Reviewed" , web: webReviewed})
+
+    }catch(error){
+        handleHttpError(res,"ERROR_REVIEWING_WEB",403)
+    }
+}
+
+module.exports = {getUsers,modifyUsers,deleteUser,modifyUserRole,getWebCity,reviewWeb}

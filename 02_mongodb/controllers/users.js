@@ -81,28 +81,40 @@ const getWebCity = async (req,res) =>{
     try{
         const {city,interests} = matchedData(req)
         const order = req.query.order
-        const webs = await webModel.find({city})
+        const cityRegex = new RegExp(city, "i"); // "i" para búsqueda insensible a mayúsculas/minúsculas
+        const interestsRegex = new RegExp(interests, "i");
+        const webs = await webModel.find({ city: cityRegex });
         // Compruebo que haya comercios en la ciudad
         if(!webs){
             handleHttpError(res,"NO_COMMERCES",403)
             return
         }
         // Si no se especifican intereses, devuelvo todos los comercios de la ciudad
-        if({interests}){
+        if(interests!=="{interests}"){
+            const websInterests = await webModel.find({city:cityRegex,activity:interestsRegex})
+            if (order === "true") {
+                // Ordenar de mayor a menor en base a `reviews.scoring`
+                websInterests.sort((a, b) => {
+                // Asegúrate de que haya al menos un review para cada web
+                const scoreA = (a.reviews && a.reviews.length > 0) ? a.reviews[0].scoring : 0; // Primer scoring
+                const scoreB = (b.reviews && b.reviews.length > 0) ? b.reviews[0].scoring : 0; // Primer scoring
+                return scoreB - scoreA; // Ordena de mayor a menor
+            });
+              }
+            res.status(200).json(websInterests)
+            
+        }else{
             // Si se especifican intereses, devuelvo los comercios que coincidan con esos intereses
             if (order === "true") {
                 // Ordenar de mayor a menor en base a `reviews.scoring`
-                webs.sort((a, b) => b.reviews.scoring - a.reviews.scoring);
+                webs.sort((a, b) => {
+                // Asegúrate de que haya al menos un review para cada web
+                const scoreA = (a.reviews && a.reviews.length > 0) ? a.reviews[0].scoring : 0; // Primer scoring
+                const scoreB = (b.reviews && b.reviews.length > 0) ? b.reviews[0].scoring : 0; // Primer scoring
+                return scoreB - scoreA; // Ordena de mayor a menor
+            });
               }
             res.status(200).json(webs)
-            
-        }else{
-            const websInterests = await webModel.find({city:city,activity:interests})
-            if (order === "true") {
-                // Ordenar de mayor a menor en base a `reviews.scoring`
-                websInterests.sort((a, b) => b.reviews.scoring - a.reviews.scoring);
-              }
-            res.status(200).json(websInterests)
         }
         
     }catch(error){

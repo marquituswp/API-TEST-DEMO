@@ -58,7 +58,7 @@ router.get("/",getUsers)
 *               type: string
 *               enum: ["true","false"]
 *             required: true
-*             description: Choose "true" to sort Commerces by CIF 
+*             description: Choose "true" to sort Webs by scoring 
 *       responses:
 *           '200':
 *               description: Return a list of Webs

@@ -6,7 +6,16 @@ const validateResults = require("../utils/handleValidator")
 const validatorGetWeb = [
 
     check("id").exists().notEmpty().isMongoId(),
+    
+    validateResults
 
+]
+
+// Validaciones para la ruta get web por id
+const validatorGetWebs = [
+
+    check("order").optional().notEmpty().isBoolean(),
+    
     validateResults
 
 ]
@@ -69,8 +78,9 @@ const validatorRestoreWeb = [
         check("id").exists().notEmpty().isMongoId(),
     
         validateResults
-    
-    ]
+]
+
+
 
 module.exports = {
     validatorCreateWeb,
@@ -78,5 +88,6 @@ module.exports = {
     validatorDeleteWeb,
     validatorGetWeb,
     validatorUploadImage,
-    validatorRestoreWeb
+    validatorRestoreWeb,
+    validatorGetWebs
 }

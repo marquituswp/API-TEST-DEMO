@@ -1,4 +1,4 @@
-GET http://localhost:3000/users
+GET http://localhost:3000/users/web/?order=true
 
 ###
 PUT http://localhost:3000/users/671b7c8836b46f2c48b41454

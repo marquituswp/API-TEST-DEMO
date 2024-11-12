@@ -7,11 +7,18 @@ const {handleHttpError}=require("../utils/handleError")
 const getWebs = async(req,res) =>{
     try{
         const data = await webModel.find({})
-
+        const order = matchedData(req).order
         if (!data){
             handleHttpError(res,"NO_DATA",403)
         }
-
+        if (order === "true") {
+            data.sort((a, b) => {
+                // Asegúrate de que haya al menos un review para cada web
+                const scoreA = (a.reviews && a.reviews.length > 0) ? a.reviews[0].scoring : 0; // Primer scoring
+                const scoreB = (b.reviews && b.reviews.length > 0) ? b.reviews[0].scoring : 0; // Primer scoring
+                return scoreB - scoreA; // Ordena de mayor a menor
+            });
+        }
         res.status(200).json(data);
     }
     catch (error) {

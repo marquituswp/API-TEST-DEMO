@@ -38,8 +38,8 @@ const validateUpdateRole = [
 
 // Validamos los datos de la ruta get web
 const validateGetWeb = [
-    check("city").exists().notEmpty(),
-    check("interests").optional().notEmpty(),
+    check("city").exists().notEmpty().toLowerCase(),
+    check("interests").optional().notEmpty().toLowerCase(),
     check("order").optional().notEmpty(),
 
     (req, res, next) => {

@@ -1,6 +1,6 @@
 // Rutas de web
 const express= require("express")
-const {validatorCreateWeb,validatorDeleteWeb,validatorGetWeb,validatorUpdateWeb,validatorRestoreWeb} = require("../validators/web")
+const {validatorCreateWeb,validatorDeleteWeb,validatorGetWeb,validatorUpdateWeb,validatorRestoreWeb,validatorGetWebs} = require("../validators/web")
 const router = express.Router()
 const uploadMiddleware = require("../utils/handleUpload")
 // Importamos el middleware de autenticación de comercio, solo los comercios pueden acceder a sus webs
@@ -10,11 +10,19 @@ const {getWebs,getWebById,createWeb,updateWeb,deleteWeb,uploadImage,getUsersWeb,
 // RUTA GET /web
 /**
 *   @openapi
-*   /web:
+*   /web/?:
 *   get:
 *       tags:
 *       - Web
 *       summary: Get all webs
+*       parameters:
+*           - in: query
+*             name: order
+*             schema:
+*               type: string
+*               enum: ["true","false"]
+*             required: true
+*             description: Choose "true" to sort Webs by scoring 
 *       responses:
 *           '200':
 *               description: Return all Webs
@@ -29,7 +37,7 @@ const {getWebs,getWebById,createWeb,updateWeb,deleteWeb,uploadImage,getUsersWeb,
 *                       schema:
 *                           $ref: "#/components/schemas/Errors/WebCreated"
 */
-router.get("/",getWebs)
+router.get("/?",validatorGetWebs,getWebs)
 
 // RUTA GET /web/users
 /**

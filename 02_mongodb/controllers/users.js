@@ -20,8 +20,15 @@ const modifyUsers = async (req,res) =>{
     try{
         const {id, ...body} = matchedData(req)
         // encripto la contraseña (si la modifica)
-        const hashedPassword = await encrypt(body.password)
-        body.password = hashedPassword
+        if(body.password){
+            const hashedPassword = await encrypt(body.password)
+            body.password = hashedPassword
+        }
+        // añado los intereses nuevos al array de intereses
+        if(body.interests){
+            user = await userModel.findById(id,{interests:1})
+            body.interests = [...user.interests,...body.interests]
+        }
         const data = await userModel.findByIdAndUpdate(id,body,{new:true})
         // Compruebo que el usuario exista
         if (!data){
@@ -83,39 +90,32 @@ const getWebCity = async (req,res) =>{
         const order = req.query.order
         const cityRegex = new RegExp(city, "i"); // "i" para búsqueda insensible a mayúsculas/minúsculas
         const interestsRegex = new RegExp(interests, "i");
-        const webs = await webModel.find({ city: cityRegex });
+        let webs=null
+        if(city !== "{city}" && interests !== "{interests}"){
+            webs = await webModel.find({ city: cityRegex,activity: interestsRegex });
+        }else if(interests !== "{interests}"){
+            webs = await webModel.find({ activity: interestsRegex });
+        }else if(city !== "{city}"){
+            webs = await webModel.find({ city: cityRegex });
+        }else{
+            webs = await webModel.find({})
+        }
+
         // Compruebo que haya comercios en la ciudad
         if(!webs){
             handleHttpError(res,"NO_COMMERCES",403)
             return
         }
-        // Si no se especifican intereses, devuelvo todos los comercios de la ciudad
-        if(interests!=="{interests}"){
-            const websInterests = await webModel.find({city:cityRegex,activity:interestsRegex})
-            if (order === "true") {
-                // Ordenar de mayor a menor en base a `reviews.scoring`
-                websInterests.sort((a, b) => {
-                // Asegúrate de que haya al menos un review para cada web
-                const scoreA = (a.reviews && a.reviews.length > 0) ? a.reviews[0].scoring : 0; // Primer scoring
-                const scoreB = (b.reviews && b.reviews.length > 0) ? b.reviews[0].scoring : 0; // Primer scoring
-                return scoreB - scoreA; // Ordena de mayor a menor
-            });
-              }
-            res.status(200).json(websInterests)
-            
-        }else{
-            // Si se especifican intereses, devuelvo los comercios que coincidan con esos intereses
-            if (order === "true") {
-                // Ordenar de mayor a menor en base a `reviews.scoring`
-                webs.sort((a, b) => {
-                // Asegúrate de que haya al menos un review para cada web
-                const scoreA = (a.reviews && a.reviews.length > 0) ? a.reviews[0].scoring : 0; // Primer scoring
-                const scoreB = (b.reviews && b.reviews.length > 0) ? b.reviews[0].scoring : 0; // Primer scoring
-                return scoreB - scoreA; // Ordena de mayor a menor
-            });
-              }
-            res.status(200).json(webs)
-        }
+        if (order === "true") {
+            // Ordenar de mayor a menor en base a `reviews.scoring`
+            webs.sort((a, b) => {
+            // Asegúrate de que haya al menos un review para cada web
+            const scoreA = (a.reviews && a.reviews.length > 0) ? a.reviews[0].scoring : 0; // Primer scoring
+            const scoreB = (b.reviews && b.reviews.length > 0) ? b.reviews[0].scoring : 0; // Primer scoring
+            return scoreB - scoreA; // Ordena de mayor a menor
+        });
+          }
+        res.status(200).json(webs)
         
     }catch(error){
         handleHttpError(res,"ERROR_GETTING_COMMERCES_CITY",403)
@@ -125,7 +125,7 @@ const getWebCity = async (req,res) =>{
 // Función para añadir una review a una web
 const reviewWeb = async (req,res) => {
     try{
-        const {webId,scoring,points,review} = matchedData(req)
+        const {webId,scoring,review} = matchedData(req)
         const web = await webModel.findById({_id:webId})
         // Compruebo que la web existe
         if(!web){
@@ -136,11 +136,11 @@ const reviewWeb = async (req,res) => {
         // Creo un objeto con la review y lo añado al array de reviews
         const data = {
             scoring:scoring,
-            points:points,
             review:review
         }
         reviews_data.push(data)
-        const webReviewed = await webModel.findByIdAndUpdate({_id:webId},{reviews:reviews_data},{new:true})
+        const webPoints = reviews_data.map(review => review.scoring).reduce((a,b)=>a+b,0)/reviews_data.length
+        const webReviewed = await webModel.findByIdAndUpdate({_id:webId},{reviews:reviews_data,points:webPoints},{new:true})
         res.status(200).json({message: "Web Reviewed" , web: webReviewed})
 
     }catch(error){

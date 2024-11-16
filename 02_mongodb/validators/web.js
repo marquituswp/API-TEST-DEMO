@@ -28,10 +28,10 @@ const validatorCreateWeb = [
     check("title").exists().notEmpty(),
     check("summary").exists().notEmpty(),
     check("texts").exists().notEmpty().isArray(),
-    check("images").exists().notEmpty().isArray(),
+    check("images").optional().notEmpty().isArray(),
+    check("points").optional().notEmpty().isNumeric(),
     check("reviews").optional().notEmpty().isObject(),
     check("reviews.scoring").optional().notEmpty().isNumeric().custom(value => value >= 0 && value <= 5),
-    check("reviews.points").optional().notEmpty().isNumeric(),
     check("reviews.review").optional().notEmpty(),
     check("cifCommerce").optional().notEmpty(),
 

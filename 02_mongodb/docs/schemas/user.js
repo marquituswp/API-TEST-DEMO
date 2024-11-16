@@ -55,10 +55,6 @@ module.exports = {
                 type:"number",
                 example: 3
             },
-            points:{
-                type:"number",
-                example: 3
-            },
             review:{
                 type:"string",
                 example: "Buena experiencia"
@@ -131,10 +127,6 @@ module.exports = {
                 type:"string",
                 example:"Web Reviewed"
             },
-            message:{
-                type:"string",
-                example:"WEB_CREATED"
-            },
             city:{
                 type:"string",
                 example:"Madrid"
@@ -157,7 +149,7 @@ module.exports = {
             },
             images:{
                 type:"array",
-                example:["madrid.jpg"]
+                example:[]
             },
             reviews:{
                 type:"object",
@@ -168,7 +160,7 @@ module.exports = {
                     },
                     points:{
                         type:"number",
-                        example: 3
+                        example: 1
                     },
                     review:{
                         type:"string",

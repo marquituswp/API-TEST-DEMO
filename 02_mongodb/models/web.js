@@ -22,14 +22,14 @@ const webSchema = new mongoose.Schema(
         images:{
             type:[String]
         },
+        points:{
+            type:Number,
+            default:0
+        },
         reviews:{
             type:[Object],
             properties:{
                 scoring:{
-                    type:Number,
-                    default:0
-                },
-                points:{
                     type:Number,
                     default:0
                 },

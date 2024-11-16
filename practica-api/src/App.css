@@ -1,43 +1,104 @@
-#root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
-}
-
-.App{
+body {
   display: flex;
-  border-radius: 15px;
-  padding: 10px;
-  flex-direction: column;
-  border: 3px solid;
-  box-shadow: 5px 5px black;
-}
-
-input{
-  border-radius: 10px;
-  font-weight: bold;
-  font-size: 20px;
-}
-
-button{
-  margin: 10px;
-  background-color: red;
-  border-radius: 15px;
-}
-
-#h3Title{
-  color: red;
-}
-
-#Search{
-  display: flex;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
+  min-height: 100vh;
+  margin: 0;
 }
 
-#Search > div{
-  padding: 5px;
+.logged {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  background-color: #f0f4f8;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  max-width: 600px;
+  margin: 2rem auto;
+  margin-top: 105px;
+}
+
+.noLogged {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  padding-top: 5px;
+  background-color: #f0f4f8;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  max-width: 600px;
+  margin: 2rem auto;
+  margin-top: 105px;
+}
+
+.welcomeInfo {
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+
+.welcomeInfo h2 {
+  font-size: 1.8rem;
+  color: #333;
+  margin-bottom: 1rem;
+}
+
+.buttonOptionsLogged {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.buttonOptionLogged {
+  padding: 0.7rem 1.2rem;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.buttonOptionLogged:hover {
+  background-color: #0056b3;
+}
+
+.buttonOptionLogOut {
+  padding: 0.7rem 1.2rem;
+  background-color: #dc3545;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 1rem;
+  cursor: pointer;
+  margin-top: 1rem;
+  transition: background-color 0.3s ease;
+}
+
+.buttonOptionLogOut:hover {
+  background-color: #c82333;
+}
+
+/* Button for 'Back' */
+.buttonPressedBack{
+  margin-top: 1rem;
+  padding: 0.5rem 1rem;
+  background-color: #6c757d;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.buttonPressedBack:hover {
+  background-color: #5a6268;
 }
 
 

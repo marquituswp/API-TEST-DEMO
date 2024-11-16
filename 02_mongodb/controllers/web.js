@@ -13,10 +13,7 @@ const getWebs = async(req,res) =>{
         }
         if (order === "true") {
             data.sort((a, b) => {
-                // Asegúrate de que haya al menos un review para cada web
-                const scoreA = (a.reviews && a.reviews.length > 0) ? a.reviews[0].scoring : 0; // Primer scoring
-                const scoreB = (b.reviews && b.reviews.length > 0) ? b.reviews[0].scoring : 0; // Primer scoring
-                return scoreB - scoreA; // Ordena de mayor a menor
+                return (a.points < b.points) ? 1 : -1;
             });
         }
         res.status(200).json(data);
@@ -176,8 +173,9 @@ const uploadImage = async (req,res) =>{
             handleHttpError(res,"NO_FILE",403)
             return
         }
-        //creamos la url de la imagen
-        const url = process.env.PUBLIC_URL + "/" + file.filename
+        // //creamos la url de la imagen
+        // const url = process.env.PUBLIC_URL + "/" + file.filename
+        const url = "/uploads/" + file.filename
         //Comprobamos si la web existe
         const data = await webModel.findById({_id:id})
         if(!data){
@@ -204,7 +202,6 @@ const uploadImage = async (req,res) =>{
                 textsData.push(text)
             });
             
-            console.log(textsData)
         }
         //Actualizamos la web con la nueva imagen
         const dataUpdated = await webModel.findOneAndUpdate({_id:id},{images:images_url , texts:textsData},{new:true})

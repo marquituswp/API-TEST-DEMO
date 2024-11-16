@@ -22,11 +22,7 @@ module.exports = {
         texts:{
             type:"array",
             example:["Madrid is a great city"]
-        },
-        images:{
-            type:"array",
-            example:["madrid.jpg"]
-        },
+        }
     },
     // Esquema para actualizar una web
     Updateweb:{
@@ -76,7 +72,7 @@ module.exports = {
             },
             images:{
                 type:"array",
-                example:["madrid.jpg"]
+                example:[]
             },
             reviews:{
                 type:"object",
@@ -151,7 +147,7 @@ module.exports = {
                     },
                     images:{
                         type:"array",
-                        example:["madrid.jpg"]
+                        example:[]
                     },
                     reviews:{
                         type:"object",

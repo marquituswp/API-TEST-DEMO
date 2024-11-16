@@ -1,0 +1,158 @@
+/* Main container for the web details */
+.webDetailContainer {
+    max-width: 700px;
+    padding: 1.5rem;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    background-color: #ffffff;
+}
+
+/* Section styling */
+.webReviews {
+    margin-bottom: 1.5rem;
+}
+
+.webImages{
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+/* Each item within web details */
+.webDetailItem, .reviewDetail {
+    display: flex;
+    justify-content: space-between;
+    padding: 0.5rem 0;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.itemLabel {
+    font-weight: bold;
+    color: #333;
+    margin-right: 0.5rem;
+}
+
+.itemLabelImage {
+    font-weight: bold;
+    color: #333;
+    margin-right: 0.5rem;
+    align-self: center;
+}
+
+.itemValue {
+    color: #555;
+}
+
+/* Section label styling */
+.sectionLabel {
+    font-size: 1.2rem;
+    color: #444;
+    font-weight: bold;
+    margin: 0.5px;
+}
+
+/* Image container */
+.imageContainer {
+    display: flex;
+    flex-wrap: wrap;
+    max-height: 150px;
+    overflow-x: auto;
+    margin-top: 20px;
+    gap: 0.5rem;
+}
+
+.webImage {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+
+.reviewsContainer {
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+.reviewItem {
+    background-color: #f9f9f9;
+    padding: 0.75rem;
+    border-radius: 5px;
+    margin-top: 1rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.reviewDetail {
+    display: flex;
+    justify-content: space-between;
+    padding: 0.3rem 0;
+}
+
+.resetButton {
+    display: inline-block;
+    font-size: 1rem;
+    position: relative;
+    left: 0;
+    top: 0;
+    margin: 0;
+    font-weight: bold;
+    color: #007bff;
+    cursor: pointer;
+}
+
+.reviewButton {
+    display: inline-block;
+    margin-top: 1rem;
+    padding: 0.5rem 1.5rem;
+    font-size: 1rem;
+    font-weight: bold;
+    color: #fff;
+    background-color: #007bff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+/* Message for no web selected */
+.noWebSelected {
+    text-align: center;
+    font-size: 1.2rem;
+    color: #777;
+    padding: 2rem;
+}
+
+.modalOverlayReview {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+    /* Fondo oscuro translúcido */
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+.modalOverlayReview.active {
+    display: flex;
+}
+/* Close Button Styling */
+.closeButton {
+    position: absolute;
+    top: 0;
+    right: 0;
+    padding-right: 15px;
+    cursor: pointer;
+    color: blue;
+}
+
+
+.starRating {
+    font-size: 1.5rem; /* adjust as needed */
+    color: gold;
+}

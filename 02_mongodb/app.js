@@ -1,6 +1,7 @@
 // App principal de la API
 const express = require("express")
 const morganBody = require("morgan-body")
+const path = require('path');
 const cors = require("cors")
 
 require('dotenv').config();
@@ -30,6 +31,7 @@ morganBody(app, {
 app.use(cors())
 app.use(express.json())
 // Middleware para la documentación de la API en Swagger
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 app.use("/swagger", swaggerUi.serve,swaggerUi.setup(swaggerDocs))
 // Uso las rutas de routes/index.js, que a su vez usa las rutas de los archivos en routes/
 app.use("/", require("./routes"))

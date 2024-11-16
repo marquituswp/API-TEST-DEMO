@@ -10,7 +10,7 @@ const validateUpdateUser = [
     check("password").optional().notEmpty().isLength({ min: 8, max: 16 }),
     check("city").optional().notEmpty(),
     // Validamos que los intereses sean un array y los pasamos a minúsculas
-    check("interests").exists().notEmpty().isArray().customSanitizer((value)=>{
+    check("interests").optional().notEmpty().isArray().customSanitizer((value)=>{
         return value.map(interests => interests.toLowerCase())
     }),
     check("allowOffers").optional().notEmpty(),
@@ -51,8 +51,7 @@ const validateGetWeb = [
 const validateReviewWeb =[
     check("webId").exists().notEmpty().isMongoId(),
     check("scoring").exists().notEmpty().isNumeric().custom(value => value >= 0 && value <= 5),
-    check("points").exists().notEmpty().isNumeric(),
-    check("review").exists().notEmpty(),
+    check("review").exists().notEmpty().isLength({ min: 3, max: 300 }),
     (req, res, next) => {
         return validateResults(req, res, next)
     }

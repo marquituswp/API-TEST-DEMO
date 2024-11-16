@@ -1,0 +1,29 @@
+.formDeleteUser {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.formDeleteUser input {
+    margin: 10px;
+    padding: 10px;
+    border: 1px solid #ced4da;
+    border-radius: 5px;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);     
+}
+
+.formDeleteUser button {
+    margin: 10px;
+    padding: 10px;
+    width: 100%;
+    border: 1px solid #ced4da;
+    border-radius: 5px;
+    background-color: #007bff;
+    color: white;
+}
+
+.formDeleteUser button:hover {
+    background-color: #0056b3;
+    cursor: pointer;
+}

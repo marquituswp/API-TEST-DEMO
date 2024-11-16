@@ -44,7 +44,7 @@ router.get("/",getUsers)
 *             name: city
 *             schema: 
 *                type: string
-*             required: true
+*             required: false
 *             description: The city of the Webs
 *           - in: path
 *             name: interests

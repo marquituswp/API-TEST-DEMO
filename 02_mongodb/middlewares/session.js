@@ -14,7 +14,6 @@ const authUser = async (req,res,next) => {
 
         // Extraemos el token de la cabecera y lo verificamos
         const token = req.headers.authorization.split(' ').pop()
-
         const dataToken = await verifyToken(token)
         if(!dataToken._id){
             handleHttpError(res,"TOKEN_NOT_VERIFIED",403)

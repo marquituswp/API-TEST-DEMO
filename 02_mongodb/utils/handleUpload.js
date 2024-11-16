@@ -3,6 +3,12 @@ const multer = require("multer")
 
 const storage = multer.diskStorage({
 
+    destination: function (req, file, callback) { //Dónde se almacenan los archivos
+            
+            callback(null, "uploads/") //Carpeta uploads
+    
+        },
+
     filename: function (req, file, callback) { //Sobreescribimos o renombramos
 
         //Tienen extensión jpg, pdf, mp4

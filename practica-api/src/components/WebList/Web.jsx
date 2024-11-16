@@ -1,11 +1,10 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import WebDetails from "./WebDetails";
 import CityInput from "./CityInput";
 import InterestInput from "./InterestInput";
 import ButtonOrder from "./ButtonOrder";
 import "../../styles/webList.css"
 export default function WebPages({ islogged }) {
-    const [url, setUrl] = useState("http://localhost:3000/web")
     const [webs, setWebs] = useState([])
     const [webSelected, setWebSelected] = useState(null)
     const [error, setError] = useState(false)
@@ -13,28 +12,35 @@ export default function WebPages({ islogged }) {
     const [cityInput, setCityInput] = useState("");
     const [interestInput, setInterestInput] = useState("");
 
-    useEffect(() => {
-
-
+    const getUrl = useCallback(() => {
         if (cityInput && interestInput) {
-            order ? setUrl(`http://localhost:3000/users/web/${cityInput}/${interestInput}?order=true`) : setUrl(`http://localhost:3000/users/web/${cityInput}/${interestInput}`)
+            return order
+                ? `http://localhost:3000/users/web/${cityInput}/${interestInput}?order=true`
+                : `http://localhost:3000/users/web/${cityInput}/${interestInput}`;
         } else if (cityInput) {
-            order ? setUrl(`http://localhost:3000/users/web/${cityInput}?order=true`) : setUrl(`http://localhost:3000/users/web/${cityInput}/${interestInput}`)
+            return order
+                ? `http://localhost:3000/users/web/${cityInput}?order=true`
+                : `http://localhost:3000/users/web/${cityInput}`;
         } else if (interestInput) {
-            order ? setUrl(`http://localhost:3000/users/web/{city}/${interestInput}?order=true`) : setUrl(`http://localhost:3000/users/web/{city}/${interestInput}`)
-        } else {
-            order ? setUrl(`http://localhost:3000/web/?order=true`) : setUrl("http://localhost:3000/web")
+            return order
+                ? `http://localhost:3000/users/web/{city}/${interestInput}?order=true`
+                : `http://localhost:3000/users/web/{city}/${interestInput}`;
         }
+        return order
+            ? `http://localhost:3000/web/?order=true`
+            : "http://localhost:3000/web";
+    }, [cityInput, interestInput, order]);
 
-
+    useEffect(() => {
+        const url = getUrl();
         fetch(url)
             .then(response => response.json())
             .then(data => setWebs(data))
             .catch(error => {
-                console.error("Error fetching data", error)
-                setError(true)
-            })
-    }, [cityInput, interestInput, order, url])
+                console.error("Error fetching data", error);
+                setError(true);
+            });
+    }, [getUrl]);
 
     let selectWeb = null
 
@@ -69,7 +75,7 @@ export default function WebPages({ islogged }) {
                 {!webSelected && selectWeb}
             </div>
 
-            {webSelected && <WebDetails webSent={webSelected} handleWebList={handleWebList} islogged={islogged} urlUsed={url} />}
+            {webSelected && <WebDetails webSent={webSelected} handleWebList={handleWebList} islogged={islogged} urlUsed={getUrl()} />}
         </div>
     )
 }

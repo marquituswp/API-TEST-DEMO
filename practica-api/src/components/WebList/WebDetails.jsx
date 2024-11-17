@@ -81,7 +81,7 @@ export default function WebDetails({ webSent, handleWebList, islogged, urlUsed})
                     </div>
 
                     <div className="webReviews">
-                        <h4 className="sectionLabel">Reviews: {handlePoints(web.points)}</h4>
+                        <h4 className="sectionLabel">Reviews: {handlePoints(reviewInfo.points)}</h4>
                         <div className='reviewsContainer'>
                             {reviewInfo.reviews.map((review, index) => (
                                 <div key={index} className="reviewItem">

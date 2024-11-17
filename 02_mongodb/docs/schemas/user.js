@@ -49,7 +49,7 @@ module.exports = {
     // Esquema para crear un comentario en una web
     reviewWeb:{
         type:"object",
-        required:["scoring","points","review"],
+        required:["scoring","review"],
         properties:{
             scoring:{
                 type:"number",
@@ -157,10 +157,6 @@ module.exports = {
                     scoring:{
                         type:"number",
                         example: 3
-                    },
-                    points:{
-                        type:"number",
-                        example: 1
                     },
                     review:{
                         type:"string",

@@ -74,14 +74,14 @@ module.exports = {
                 type:"array",
                 example:[]
             },
+            points:{
+                type:"number",
+                example:0
+            },
             reviews:{
                 type:"object",
                 properties:{
                     scoring:{
-                        type:"number",
-                        example: 3
-                    },
-                    points:{
                         type:"number",
                         example: 3
                     },
@@ -149,14 +149,14 @@ module.exports = {
                         type:"array",
                         example:[]
                     },
+                    points:{
+                        type:"number",
+                        example:0
+                    },
                     reviews:{
                         type:"object",
                         properties:{
                             scoring:{
-                                type:"number",
-                                example: 3
-                            },
-                            points:{
                                 type:"number",
                                 example: 3
                             },

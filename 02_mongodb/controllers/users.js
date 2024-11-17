@@ -20,26 +20,33 @@ const modifyUsers = async (req,res) =>{
     try{
         const {id, ...body} = matchedData(req)
         // encripto la contraseña (si la modifica)
+        const user = await userModel.findById({_id:id})
+        if(!user){
+            handleHttpError(res,"USER_NOT_FOUND",403)
+            return
+        }
+        // Compruebo que el usuario que intenta borrar sea el mismo que el logueado (solo se puede borrar a uno mismo)
+        if (user.email !== req.user.email){
+            handleHttpError(res,"CAN'T_UPDATE_OTHERS",403)
+            return
+        }
         if(body.password){
             const hashedPassword = await encrypt(body.password)
             body.password = hashedPassword
         }
         // añado los intereses nuevos al array de intereses
         if(body.interests){
-            user = await userModel.findById(id,{interests:1})
-            body.interests = [...user.interests,...body.interests]
+            
+            const userInterests = await userModel.findById(id,{interests:1})
+            body.interests = [...userInterests.interests,...body.interests]
         }
         const data = await userModel.findByIdAndUpdate(id,body,{new:true})
-        // Compruebo que el usuario exista
-        if (!data){
-            handleHttpError(res,"USER_NOT_EXISTS",403)
-            return
-        }
 
         res.status(200).json({message:"User updated",
             data:data
         })
     }catch(error){
+        console.log(error)
         handleHttpError(res,"ERROR_UPDATING_USER",403)
     }
 }

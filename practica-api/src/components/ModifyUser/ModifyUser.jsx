@@ -62,7 +62,7 @@ export default function ModifyUser({onClickModify}) {
                     
                 })
                 .catch(() => {
-                    id ? setData("Invalid values"): setData("ID is required")
+                    id ? setData("CAN'T_UPDATE_OTHERS"): setData("ID is required")
                 })
         }catch{
             setData("Invalid values")

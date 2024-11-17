@@ -36,7 +36,7 @@ function App() {
         {!clicked && <div className='welcomeInfo'>
           <h2>Hello {token && token.role[0]} {name}</h2>
           <div className='buttonOptionsLogged'>
-            {token && token.role[0]==="admin" && <button className='buttonOptionLogged' onClick={() => handleButton("modify")} >Modify Users Data</button>}
+            {<button className='buttonOptionLogged' onClick={() => handleButton("modify")} >Modify Users Data</button>}
             <button className='buttonOptionLogged' onClick={() => handleButton("delete")} >Remove Account</button>
             <button className='buttonOptionLogged' onClick={() => handleButton("webs")} >See Webs</button>
           </div>

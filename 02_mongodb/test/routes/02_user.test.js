@@ -25,7 +25,7 @@ describe("Users", () =>{
     it("Should update a user by an ID", async () =>{
         const response = await request(app)
             .put(`/users/${globalTestConfig.user_id}`)
-            .set('Authorization', `Bearer ${globalTestConfig.token_admin}`) // Se necesita autorización
+            .set('Authorization', `Bearer ${globalTestConfig.token_user}`) // Se necesita autorización
             .send({"name": "Test1Updated", "age":20, "email":"testemail@gmail.com", "password": "testpassword1", "city":"cityTest","interests":["activityTest","activityTestUpdated"], "allowOffers": true})
             .expect(200)
         expect(response.body.data.name).toEqual("Test1Updated")

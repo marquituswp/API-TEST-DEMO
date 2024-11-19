@@ -21,7 +21,7 @@ describe("Authorization", () =>{
     })
 
     // Test para loguear un usuario
-    it("Should login", async () =>{
+    it("Should login an admin", async () =>{
         const response = await request(app)
             .post("/auth/login")
             .send({"email":"user35@test.com", "password": "HolaMundo01"})
@@ -30,6 +30,18 @@ describe("Authorization", () =>{
         
         expect(response.body.user.email).toEqual("user35@test.com")
         globalTestConfig.token_admin = response.body.token
+    })
+
+    // Test para loguear un usuario
+    it("Should login a user", async () =>{
+        const response = await request(app)
+            .post("/auth/login")
+            .send({"email":"testemail@gmail.com", "password": "testpassword1"})
+            .set("Accept", "application/json")
+            .expect(200)
+        
+        expect(response.body.user.email).toEqual("testemail@gmail.com")
+        globalTestConfig.token_user = response.body.token
     })
 })
 

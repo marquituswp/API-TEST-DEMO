@@ -45,9 +45,9 @@ describe("Web", () =>{
     })
 
     // Test para actualizar una web por ID
-    it("Should update a web by ID", async () =>{
+    it("Should update a commerce web", async () =>{
         const response = await request(app)
-            .put("/web/"+webId)
+            .put("/web")
             .set('Authorization', `Bearer ${globalTestConfig.token_commerce}`) // Se necesita autorización de comercio (la web pertenece a un comercio)
             .send({"city":"cityTestUpdated","activity":"activityTestUpdated","title":"titleTestUpdated","summary":"summaryTestUpdated","texts":["text1","text2"],"images":["image1","image2"],"reviews":{"scoring":4.5,"points":100,"review":"reviewTest"}})
             .expect(200)
@@ -57,7 +57,7 @@ describe("Web", () =>{
     // Test para subir una imagen a una web
     it("Should upload an image to a web", async () =>{
         await request(app)
-            .patch("/web/"+webId)
+            .patch("/web")
             .set('Authorization', `Bearer ${globalTestConfig.token_commerce}`) // Se necesita autorización de comercio (la web pertenece a un comercio)
             .attach('image', path.resolve(__dirname, '../../img.jpg')) // Ruta a la imagen de prueba
             .expect(200)
@@ -87,27 +87,27 @@ describe("Web", () =>{
         expect(response.body.web.reviews[0].scoring).toEqual(4.5)
     })
 
-    // Test para borrar una web por ID lógicamente
-    it("Should delete a web by ID logically", async () =>{
+    // Test para borrar una web lógicamente
+    it("Should delete a commerce web logically", async () =>{
         await request(app)
-            .delete("/web/"+webId)
+            .delete("/web")
             .set('Authorization', `Bearer ${globalTestConfig.token_commerce}`) // Se necesita autorización de comercio (la web pertenece a un comercio)
             .query({"hard":false})
             .expect(200)
     })
 
-    // Test para restaurar una web por ID
-    it("Should restore a web by ID", async () =>{
+    // Test para restaurar una web
+    it("Should restore a commerce web", async () =>{
         await request(app)
-            .patch("/web/restore/"+webId)
+            .patch("/web/restore")
             .set('Authorization', `Bearer ${globalTestConfig.token_commerce}`) // Se necesita autorización de comercio (la web pertenece a un comercio)
             .expect(200)
     })
 
-    // Test para borrar una web por ID físicamente
-    it("Should delete a web by ID phisicaly", async () =>{
+    // Test para borrar una web físicamente
+    it("Should delete a commerce web phisicaly", async () =>{
         await request(app)
-            .delete("/web/"+webId)
+            .delete("/web/")
             .set('Authorization', `Bearer ${globalTestConfig.token_commerce}`) // Se necesita autorización de comercio (la web pertenece a un comercio)
             .query({"hard":true})
             .expect(200)
@@ -139,10 +139,10 @@ describe("Web", () =>{
         .expect(200)
     })
 
-    // Test para borrar un usuario por ID
-    it("Should delete a user by an ID phisicaly", async () =>{
+    // Test para borrar un usuario
+    it("Should delete a user", async () =>{
         await request(app)
-            .delete(`/users/${globalTestConfig.user_id}`)
+            .delete(`/users`)
             .set('Authorization', `Bearer ${globalTestConfig.token_own}`) // Se necesita autorización y ser el mismo usuario (no se puede borrar a otro)
             .expect(200)
     })

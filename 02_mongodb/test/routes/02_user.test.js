@@ -21,10 +21,10 @@ describe("Users", () =>{
             .expect(200)
     })
 
-    // Test para obtener un usuario por ID
-    it("Should update a user by an ID", async () =>{
+    // Test para obtener un usuario
+    it("Should update a user", async () =>{
         const response = await request(app)
-            .put(`/users/${globalTestConfig.user_id}`)
+            .put(`/users`)
             .set('Authorization', `Bearer ${globalTestConfig.token_user}`) // Se necesita autorización
             .send({"name": "Test1Updated", "age":20, "email":"testemail@gmail.com", "password": "testpassword1", "city":"cityTest","interests":["activityTest","activityTestUpdated"], "allowOffers": true})
             .expect(200)

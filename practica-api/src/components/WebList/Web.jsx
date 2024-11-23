@@ -3,7 +3,6 @@ import WebDetails from "./WebDetails";
 import CityInput from "./CityInput";
 import InterestInput from "./InterestInput";
 import ButtonOrder from "./ButtonOrder";
-import "../../styles/webList.css"
 export default function WebPages({ islogged }) {
     const [webs, setWebs] = useState([])
     const [webSelected, setWebSelected] = useState(null)
@@ -48,12 +47,12 @@ export default function WebPages({ islogged }) {
         selectWeb = <p style={{ textAlign: "center" }}>Error al cargar la lista de Webs</p>
     } else {
         selectWeb = webs.map((web, index) => (
-            <div key={index} className="webItem">
-                <button className="selectWebButton" onClick={() => setWebSelected(web)}>
+            <div key={index} className="listItem">
+                <button className="itemSelect" onClick={() => setWebSelected(web)}>
                     {web.city}
                 </button>
-                <p className="webTitle" onClick={() => setWebSelected(web)}>Title: {web.title}</p>
-                <p className="webActivity" onClick={() => setWebSelected(web)}>Activity: {web.activity}</p>
+                <p className="itemTitle" onClick={() => setWebSelected(web)}>Title: {web.title}</p>
+                <p className="itemDescript" onClick={() => setWebSelected(web)}>Activity: {web.activity}</p>
             </div>
         ))
     }
@@ -63,15 +62,15 @@ export default function WebPages({ islogged }) {
     }
 
     return (
-        <div className="webList">
-            <h3 className="webListTitle">Web Pages</h3>
+        <div className="itemsList">
+            <h3 className="listTitle">Web Pages</h3>
             {!webSelected && <div className="searchSection">
                 <CityInput setCityInput={setCityInput} />
                 <InterestInput setInterestInput={setInterestInput} />
-                <ButtonOrder setButtonOrder={setButtonOrder} />
+                <ButtonOrder setButtonOrder={setButtonOrder} type={"puntuación"}/>
             </div>}
 
-            <div className="webListContainer">
+            <div className="listContainer">
                 {!webSelected && selectWeb}
             </div>
 

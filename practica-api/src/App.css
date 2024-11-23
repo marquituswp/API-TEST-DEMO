@@ -35,53 +35,15 @@ body {
   margin-top: 105px;
 }
 
-.welcomeInfo {
+.dashboardInfo {
   text-align: center;
   margin-bottom: 1.5rem;
 }
 
-.welcomeInfo h2 {
+.dashboardInfo h2 {
   font-size: 1.8rem;
   color: #333;
   margin-bottom: 1rem;
-}
-
-.buttonOptionsLogged {
-  display: flex;
-  gap: 1rem;
-  flex-wrap: wrap;
-  justify-content: center;
-}
-
-.buttonOptionLogged {
-  padding: 0.7rem 1.2rem;
-  background-color: #007bff;
-  color: white;
-  border: none;
-  border-radius: 6px;
-  font-size: 1rem;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-}
-
-.buttonOptionLogged:hover {
-  background-color: #0056b3;
-}
-
-.buttonOptionLogOut {
-  padding: 0.7rem 1.2rem;
-  background-color: #dc3545;
-  color: white;
-  border: none;
-  border-radius: 6px;
-  font-size: 1rem;
-  cursor: pointer;
-  margin-top: 1rem;
-  transition: background-color 0.3s ease;
-}
-
-.buttonOptionLogOut:hover {
-  background-color: #c82333;
 }
 
 /* Button for 'Back' */
@@ -101,6 +63,32 @@ body {
   background-color: #5a6268;
 }
 
+button:active {
+  transform: translateY(2px);
+}
+
+.buttonTokenCommerce{
+  margin: 10px;
+    padding: 10px;
+    width: 100%;
+    border: 1px solid #ced4da;
+    border-radius: 5px;
+    background-color: #007bff;
+    color: white;
+}
+
+.buttonTokenCommerce:hover{
+  background-color: #0056b3;
+  cursor: pointer;
+}
+
+.inputCommerce{
+  padding: 10px;
+  border: 1px solid #ced4da;
+  border-radius: 5px;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);   
+  width: 100%;
+}
 
 @keyframes logo-spin {
   from {

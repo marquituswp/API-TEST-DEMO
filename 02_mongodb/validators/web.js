@@ -41,8 +41,6 @@ const validatorCreateWeb = [
 
 // Validaciones para la ruta put para actualizar web
 const validatorUpdateWeb = [
-    
-        check("id").exists().notEmpty().isMongoId(),
         check("city").optional().notEmpty().toLowerCase(),
         check("activity").optional().notEmpty().toLowerCase(),
         check("title").optional().notEmpty(),
@@ -54,40 +52,9 @@ const validatorUpdateWeb = [
         
 ]
 
-// Validaciones para la ruta delete para borrar web
-const validatorDeleteWeb = [
-
-    check("id").exists().notEmpty().isMongoId(),
-
-    validateResults
-
-]
-
-// Validaciones para la ruta patch para subir imagen
-const validatorUploadImage = [
-
-    check("id").exists().notEmpty().isMongoId(),
-
-    validateResults
-
-]
-
-// Validaciones para la ruta patch para restaurar web
-const validatorRestoreWeb = [
-    
-        check("id").exists().notEmpty().isMongoId(),
-    
-        validateResults
-]
-
-
-
 module.exports = {
     validatorCreateWeb,
     validatorUpdateWeb,
-    validatorDeleteWeb,
     validatorGetWeb,
-    validatorUploadImage,
-    validatorRestoreWeb,
     validatorGetWebs
 }

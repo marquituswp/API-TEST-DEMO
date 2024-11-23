@@ -1,110 +1,150 @@
 import { useState } from "react";
+import { Formik, Form, Field, ErrorMessage } from "formik";
+import * as Yup from "yup";
 import Message from "./Message";
-import "../../styles/FormAuth.css"
-export default function SingUp({ setLoggedSignUp,setNameSignUp }) {
-    const [data, setData] = useState("")
-    const [interests, setIterests] = useState([])
-    const [inputInterest, setInputInterest] = useState("")
-    const [body, setBody] = useState({
-        name: "",
-        age: 0,
-        email: "",
-        password: "",
-        city: "",
-        interests: [],
-        allowOffers: false
-    })
 
-    const handleInterestChange = (event) => {
-        setInputInterest(event.target.value); // Actualiza el interés temporal
-    }
+export default function SignUpFormik({ setLoggedSignUp, setNameSignUp }) {
+    const [data, setData] = useState("");
+    const [interests, setInterests] = useState([]);
+    const [inputInterest, setInputInterest] = useState("");
 
-    const handleChange = (event, field) => {
-        const data = field === "allowOffers" ? event.target.checked : event.target.value;
-        setBody({
-            ...body,
-            [field]: data
-        })
-    }
+    // Validation schema using Yup
+    const validationSchema = Yup.object({
+        name: Yup.string()
+            .min(3, "Name must be at least 3 characters")
+            .max(99, "Name must be at most 99 characters")
+            .required("Name is required"),
+        email: Yup.string().email("Invalid email").required("Email is required"),
+        password: Yup.string()
+            .min(8, "At least 8 characters")
+            .max(16, "At most 16 characters")
+            .required("Password is required"),
+        age: Yup.number()
+            .min(1, "Age must be greater than 0")
+            .required("Age is required"),
+        city: Yup.string().required("City is required"),
+        allowOffers: Yup.boolean(),
+    });
 
-    const addInterest = () => {
-        setIterests([...interests, inputInterest.trim()])
-        setBody({
-            ...body,
-            "interests": [...interests, inputInterest.trim()]
-        })
-        setInputInterest("")
-    }
-
-    const handleClick = (event) => {
-        event.preventDefault()
-        try {
-            fetch("http://localhost:3000/auth/register", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify(body)
-            })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.token){
-                        setLoggedSignUp(true)
-                        const token = data.token
-                        localStorage.setItem('token', token)
-                        setNameSignUp(data.user.name)
-                    }else{
-                        body.password.length <=9 ? setData("Insert Password lenght greather than 8"): setData("Invalid Values")
-                    }
-                })
-                .catch(() => {
-                    setData("Invalid Values")
-                })
-        } catch {
-            setData("Internal Error")
+    const handleAddInterest = () => {
+        if (inputInterest.trim() !== "") {
+            setInterests([...interests, inputInterest.trim()]);
+            setInputInterest("");
         }
-    }
+    };
+
+    const handleRemoveInterest = (index) => {
+        setInterests(interests.filter((_, i) => i !== index));
+    };
+
+    const handleSubmit = (values, { setSubmitting }) => {
+        const body = { ...values, interests };
+        fetch("http://localhost:3000/auth/register", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(body),
+        })
+            .then((response) => response.ok ? response.json():response.text())
+            .then((data) => {
+                setSubmitting(false);
+                if (data.token) {
+                    setLoggedSignUp(true);
+                    const token = data.token;
+                    localStorage.setItem("token", token);
+                    setNameSignUp(data.user.name);
+                } else {
+                    setData(data);
+                }
+            })
+            .catch(() => {
+                setData("Invalid Values");
+                setSubmitting(false);
+            });
+    };
 
     return (
         <>
-            <h1>SignUp</h1>
-            <form onSubmit={handleClick} className="formSignUp">
-                <div>
-                    <input type="text" onChange={(event) => { handleChange(event, 'name') }} placeholder="Name" />
-                </div>
-                <div>
-                    <input type="number" onChange={(event) => { handleChange(event, 'age') }} placeholder="Age" />
-                </div>
-                <div>
-                    <input type="email" onChange={(event) => { handleChange(event, 'email') }} placeholder="Email" />
-                </div>
-                <div>
-                    <input type="password" onChange={(event) => { handleChange(event, 'password') }} placeholder="Password" />
-                </div>
-                <div>
-                    <input type="text" onChange={(event) => { handleChange(event, 'city') }} placeholder="City" />
-                </div>
+            <h1>Sign Up</h1>
+            <Formik
+                initialValues={{
+                    name: "",
+                    email: "",
+                    password: "",
+                    age: "",
+                    city: "",
+                    allowOffers: false,
+                }}
+                validationSchema={validationSchema}
+                onSubmit={handleSubmit}
+            >
+                {({ isSubmitting, values }) => (
+                    <Form className="formContainer">
+                        <div style={{ "position": "relative" }}>
+                            <Field type="text" name="name" placeholder="Name" />
+                            <ErrorMessage name="name" component="div" className="errorMessage" />
+                        </div>
 
-                <div className="interestsSignUp">
-                    <input
-                        type="text"
-                        value={inputInterest}
-                        onChange={handleInterestChange}
-                        placeholder="Interests"
-                    />
-                    <button type="button" onClick={addInterest}>Add Interest</button>
-                </div>
-                <div>
-                    <label>AllowOffers </label>
-                    <input
-                        type="checkbox"
-                        checked={body.allowOffers}
-                        onChange={(event) => handleChange(event, 'allowOffers')}
-                    />
-                </div>
-                <button onClick={handleClick}>Submit</button>
-            </form>
+                        <div style={{ "position": "relative" }}>
+                            <Field type="number" name="age" placeholder="Age" />
+                            <ErrorMessage name="age" component="div" className="errorMessage" />
+                        </div>
+
+                        <div style={{ "position": "relative" }}>
+                            <Field type="email" name="email" placeholder="Email" />
+                            <ErrorMessage name="email" component="div" className="errorMessage" />
+                        </div>
+
+                        <div style={{ "position": "relative" }}>
+                            <Field type="password" name="password" placeholder="Password" />
+                            <ErrorMessage name="password" component="div" className="errorMessage" />
+                        </div>
+
+                        <div style={{ "position": "relative" }}>
+                            <Field type="text" name="city" placeholder="City" />
+                            <ErrorMessage name="city" component="div" className="errorMessage" />
+                        </div>
+
+                        <div className="arrayInputContainer">
+                            <input
+                                type="text"
+                                value={inputInterest}
+                                onChange={(e) => setInputInterest(e.target.value)}
+                                placeholder="Add Interest"
+                            />
+                            <button type="button" onClick={handleAddInterest}>
+                                Add Interest
+                            </button>
+                        </div>
+                        <ul>
+                            {interests.map((interest, index) => (
+                                <li key={index} style={{ display: "flex", alignItems: "center" }}>
+                                    {interest}
+                                    <button
+                                        type="button"
+                                        onClick={() => handleRemoveInterest(index)} // Llama a removeInterest
+                                        style={{ marginLeft: "10px", color: "red", cursor: "pointer" }}
+                                    >
+                                        Remove
+                                    </button>
+                                </li>
+                            ))}
+                        </ul>
+
+
+                        <div>
+                            <label>Allow Offers</label>
+                            <Field type="checkbox" name="allowOffers" />
+                        </div>
+
+                        <button type="submit" disabled={isSubmitting}>
+                            Submit
+                        </button>
+                    </Form>
+                )}
+            </Formik>
             <Message loginMessage={data} />
         </>
-    )
+    );
 }

@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-export default function ButtonOrder({setButtonOrder}) {
+export default function ButtonOrder({setButtonOrder, type}) {
     const [order,setOrder] = useState(false)
     
     const toggleOrderValue = () => {
@@ -12,7 +12,7 @@ export default function ButtonOrder({setButtonOrder}) {
     return (
         <div>
             <button onClick={toggleOrderValue}>
-                {order ? "Desorganizar" : "Ordenar por puntuación"}
+                {order ? "Desorganizar" : `Ordenar por ${type}`}
             </button>
         </div>
     );

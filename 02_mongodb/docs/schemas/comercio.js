@@ -1,6 +1,6 @@
 module.exports = {
     type: 'object',
-    // Esquema para crear un comentario
+    // Esquema para crear un comercio
     required:["name","cif","email","phone","page_id"],
     properties:{
         name:{
@@ -24,6 +24,7 @@ module.exports = {
             example: "40637"
         },
     },
+    // Esquema de respuesta de creación de comercio
     CommerceCreated:{
         type:"object",
         properties:{
@@ -53,6 +54,7 @@ module.exports = {
             },
         }
     },
+    // Esquema de respuesta de eliminación de comercio
     CommerceDeleted:{
         type:"object",
         properties:{
@@ -62,6 +64,7 @@ module.exports = {
             }
         }
     },
+    // Esquema de respuesta de restauración de comercio
     CommerceRestored:{
         type:"object",
         properties:{

@@ -2,7 +2,7 @@
 const express = require("express")
 const router = express.Router()
 const {getUsers,modifyUsers,deleteUser,modifyUserRole,getWebCity,reviewWeb} = require("../controllers/users")
-const {validateUpdateUser,validateDeleteUser,validateUpdateRole,validateGetWeb,validateReviewWeb} = require("../validators/users")
+const {validateUpdateUser,validateUpdateRole,validateGetWeb,validateReviewWeb} = require("../validators/users")
 // Importamos el middleware de autenticación de usuario, para proteger las rutas
 const {authUser} = require("../middlewares/session")
 // Importamos el middleware de comprobación de roles de usuario, SOLO ADMIN puede cambiar roles
@@ -125,10 +125,10 @@ router.get("/web/:city/:interests?",validateGetWeb,getWebCity)
 */
 router.put("/role",authUser,checkRolUser(["admin"]),validateUpdateRole,modifyUserRole)
 
-// RUTA PUT /users/{id}
+// RUTA PUT /users
 /**
 *   @openapi
-*   /users/{id}:
+*   /users:
 *   put:
 *       tags:
 *       - Users
@@ -136,13 +136,6 @@ router.put("/role",authUser,checkRolUser(["admin"]),validateUpdateRole,modifyUse
 *       description: Update all the information of the user
 *       security:
 *           - bearerAuth: []
-*       parameters:
-*           - in: path
-*             name: id
-*             schema: 
-*                type: string
-*             required: true
-*             description: The ID of the user want to update
 *       requestBody:
 *           content:
 *               application/json:
@@ -168,25 +161,18 @@ router.put("/role",authUser,checkRolUser(["admin"]),validateUpdateRole,modifyUse
 *                       schema:
 *                           $ref: "#/components/schemas/Errors/NotToken"
 */
-router.put("/:id",authUser,validateUpdateUser,modifyUsers)
+router.put("/",authUser,validateUpdateUser,modifyUsers)
 
-// RUTA DELETE /users/{id}
+// RUTA DELETE /users
 /**
 *   @openapi
-*   /users/{id}:
+*   /users:
 *   delete:
 *       tags:
 *       - Users
-*       summary: Delete User phisicaly by ID
+*       summary: Delete User phisicaly
 *       security:
 *           - bearerAuth: []
-*       parameters:
-*           - in: path
-*             name: id
-*             schema: 
-*                type: string
-*             required: true
-*             description: The ID of the user want to update. You can only delete yourself
 *       responses:
 *           '200':
 *               description: Return a message that indicates the user has been deleted
@@ -199,7 +185,7 @@ router.put("/:id",authUser,validateUpdateUser,modifyUsers)
 *               content:
 *                   application/json:
 *                       schema:
-*                           $ref: "#/components/schemas/User/UserDelete"
+*                           $ref: "#/components/schemas/Errors/UserDelete"
 *           '404':
 *               description: Error checking the role
 *               content:
@@ -207,7 +193,7 @@ router.put("/:id",authUser,validateUpdateUser,modifyUsers)
 *                       schema:
 *                           $ref: "#/components/schemas/Errors/NotToken"
 */
-router.delete("/:id",authUser,validateDeleteUser,deleteUser)
+router.delete("/",authUser,deleteUser)
 
 // RUTA PUT /users/reviewWeb/{webId}
 /**

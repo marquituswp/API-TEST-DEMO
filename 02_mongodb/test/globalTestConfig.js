@@ -1,3 +1,4 @@
+// Valores globales para los test
 module.exports = {
     token_admin: null,
     token_user: null,

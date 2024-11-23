@@ -1,5 +1,6 @@
 module.exports = {
     type: 'object',
+    // Esquema de respuesta de error al registrar un usuario
     auth:{
         type: 'object',
         properties:{
@@ -9,6 +10,7 @@ module.exports = {
             }
         }
     },
+    // Esquema de respuesta de error al loguear un usuario
     login:{
         type: 'object',
         properties:{
@@ -18,6 +20,7 @@ module.exports = {
             }
         }
     },
+    // Esquema de respuesta de error al obtener un usuario
     RolUser:{
         400:{
             type:"object",
@@ -39,6 +42,7 @@ module.exports = {
         }
         
     },
+    // Esquema de respuesta de error al verificar token
     NotToken:{
         type:"object",
         properties:{
@@ -48,6 +52,7 @@ module.exports = {
             }
         }
     },
+    // Esquema de respuesta de error al obtener usuarios
     User:{
         type:"object",
         properties:{
@@ -57,6 +62,7 @@ module.exports = {
             }
         }
     },
+    // Esquema de respuesta de error al obtener webs de un usuario de una ciudad o interes
     UserWeb:{
         type:"object",
         properties:{
@@ -66,6 +72,7 @@ module.exports = {
             }
         }
     },
+    // Esquema de respuesta de error al obtener actualizar un usuario
     UserUpdate:{
         type:"object",
         properties:{
@@ -75,6 +82,7 @@ module.exports = {
             }
         }
     },
+    // Esquema de respuesta de error al actualizar el rol de un usuario
     UserUpdateRole:{
         type:"object",
         properties:{
@@ -84,6 +92,7 @@ module.exports = {
             }
         }
     },
+    // Esquema de respuesta de error al eliminar un usuario
     UserDelete:{
         type:"object",
         properties:{
@@ -93,6 +102,7 @@ module.exports = {
             }
         }
     },
+    // Esquema de respuesta de error al hacer review de una web
     UserReviewWeb:{
         type:"object",
         properties:{
@@ -102,6 +112,7 @@ module.exports = {
             }
         }
     },
+    // Esquema de respuesta de error al obtener webs
     WebCreated:{
         type:"object",
         properties:{
@@ -111,6 +122,7 @@ module.exports = {
             }
         }
     },
+    // Esquema de respuesta de error al obtener usuarios interesados en una web
     WebUsers:{
         type:"object",
         properties:{
@@ -120,6 +132,7 @@ module.exports = {
             }
         }
     },
+    // Esquema de respuesta de error al crear web
     CreateWeb:{
         type:"object",
         properties:{
@@ -129,6 +142,7 @@ module.exports = {
             }
         }
     },
+    // Esquema de respuesta de error al actualizar web
     UpdateWeb:{
         type:"object",
         properties:{
@@ -138,6 +152,7 @@ module.exports = {
             }
         }
     },
+    // Esquema de respuesta de error al eliminar web
     WebDelete:{
         type:"object",
         properties:{
@@ -147,6 +162,7 @@ module.exports = {
             }
         }
     },
+    // Esquema de respuesta de error al subir imagen
     WebUpload:{
         type:"object",
         properties:{
@@ -156,6 +172,7 @@ module.exports = {
             }
         }
     },
+    // Esquema de respuesta de error al restaurar web
     WebRestored:{
         type:"object",
         properties:{
@@ -165,6 +182,7 @@ module.exports = {
             }
         }
     },
+    // Esquema de respuesta de error al obtener comercios
     Commerce:{
         type:"object",
         properties:{
@@ -174,6 +192,7 @@ module.exports = {
             }
         }
     },
+    // Esquema de respuesta de error al crear comercio
     CommerceCreated:{
         type:"object",
         properties:{
@@ -183,6 +202,7 @@ module.exports = {
             }
         }
     },
+    // Esquema de respuesta de error al actualizar comercio
     CommerceUpdate:{
         type:"object",
         properties:{
@@ -192,6 +212,7 @@ module.exports = {
             }
         }
     },
+    // Esquema de respuesta de error al eliminar comercio
     CommerceDelete:{
         type:"object",
         properties:{
@@ -201,6 +222,7 @@ module.exports = {
             }
         }
     },
+    // Esquema de respuesta de error al restaurar comercio
     CommerceRestored:{
         type:"object",
         properties:{
@@ -210,6 +232,7 @@ module.exports = {
             }
         }
     },
+    // Esquema de respuesta de error al enviar email
     Mail:{
         type:"object",
         properties:{

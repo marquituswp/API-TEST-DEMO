@@ -309,7 +309,7 @@ router.delete("/:cif",authUser,checkRolUser(["admin"]),validatorDeleteComercio, 
 *               content:
 *                   application/json:
 *                       schema:
-*                           $ref: "#/components/schemas/Errors/CouldNotRestored"
+*                           $ref: "#/components/schemas/Errors/CommerceRestored"
 *           '404':
 *               description: Error checking the role
 *               content:
@@ -317,7 +317,7 @@ router.delete("/:cif",authUser,checkRolUser(["admin"]),validatorDeleteComercio, 
 *                       schema:
 *                           $ref: "#/components/schemas/Errors/NotToken"
 */
-router.patch("/restore/:cif",authUser,validatorRestoreCommerce, restoreComercio)
+router.patch("/restore/:cif",authUser,checkRolUser(["admin"]),validatorRestoreCommerce, restoreComercio)
 
 // RUTA PARA ENVIAR CORREO
 /**
@@ -355,7 +355,7 @@ router.patch("/restore/:cif",authUser,validatorRestoreCommerce, restoreComercio)
 *                       schema:
 *                           $ref: "#/components/schemas/Errors/NotToken"
 */
-router.post("/mail", authUser, validatorMail, send)
+router.post("/mail", authUser,checkRolUser(["admin"]), validatorMail, send)
 
 
 module.exports = router

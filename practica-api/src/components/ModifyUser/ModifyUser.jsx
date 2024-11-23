@@ -1,117 +1,189 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { jwtDecode } from "jwt-decode";
+import { Formik, Form, Field, ErrorMessage } from "formik";
+import * as Yup from "yup";
 import Message from "../Login/Message";
-import '../../styles/FormModifyUser.css'
-export default function ModifyUser({onClickModify}) {
-    const [id,setId]=useState("")
-    const [data, setData] = useState("")
-    const [interests, setIterests] = useState([])
-    const [inputInterest, setInputInterest] = useState("")
-    const [body, setBody] = useState({
-    })
 
-    const handleInterestChange = (event) => {
-        setInputInterest(event.target.value); // Actualiza el interés temporal
-    }
+export default function ModifyUser({ onClickModify }) {
+    const [data, setData] = useState("");
+    const [interests, setInterests] = useState([]);
+    const [inputInterest, setInputInterest] = useState("");
+    const [userData,setUserData]=useState(null)
 
-    const addInterest = () => {
-        setIterests([...interests, inputInterest.trim()])
-        setBody({
-            ...body,
-            "interests": [...interests, inputInterest.trim()]
-        })
-        setInputInterest("")
-    }
-
-
-    const handleChange = (event, field) => {
-        let data = event.target.value
-        if (field === "scoring") {
-            data = Number(data)
-            setBody({
-                ...body,
-                [field]: data
-            })
-        }else if(field === "id"){
-            setId(data)
-        }else{
-            setBody({
-                ...body,
-                [field]: data
-            })
-        }
-        
-    }
-
-    const handleClick = (event)=>{
-        try{
-            const token = localStorage.getItem('token')
-            event.preventDefault()
-            fetch(`http://localhost:3000/users/${id}`, {
-                method: "PUT",
-                headers: {
-                    'Authorization': `Bearer ${token}`,
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify(body)
-            })
+    useEffect(()=>{
+        try {
+            const id = jwtDecode(localStorage.getItem('token'))._id
+            fetch(`http://localhost:3000/users/`)
                 .then(response => response.json())
                 .then(data => {
-                    id ? console.log(data): null
-                    
-                    data.message ? onClickModify(""): null
-                    
+                    (data.map((user)=>{
+                        if (user._id === id){
+                            setInterests(user.interests)
+                            setUserData(user)
+                        }
+                    }))
+
                 })
                 .catch(() => {
-                    id ? setData("CAN'T_UPDATE_OTHERS"): setData("ID is required")
                 })
-        }catch{
+        } catch {
             setData("Invalid values")
         }
-    }
+    },[])
 
-    return(
+    // Yup validation schema
+    const validationSchema = Yup.object({
+        name: Yup.string()
+            .min(3, "At least 3 characters")
+            .max(99, "At most 99 characters"),
+        email: Yup.string().email("Invalid email"),
+        password: Yup.string()
+            .min(8, "At least 8 characters")
+            .max(16, "At most 16 characters"),
+        age: Yup.number()
+            .min(1, "Age must be greater than 0"),
+        city: Yup.string(),
+        allowOffers: Yup.boolean(),
+    });
+
+    const handleAddInterest = () => {
+        const trimmedInterest = inputInterest.trim();
+        if (trimmedInterest && !interests.includes(trimmedInterest)) {
+            setInterests([...interests, trimmedInterest]);
+            setInputInterest("");
+        }
+    };
+
+    const handleRemoveInterest = (index) => {
+        setInterests(interests.filter((_, i) => i !== index));
+    };
+
+    const handleSubmit = (values, { setSubmitting }) => {
+        const token = localStorage.getItem("token");
+        const body = { ...values, interests };
+
+        fetch(`http://localhost:3000/users/`, {
+            method: "PUT",
+            headers: {
+                Authorization: `Bearer ${token}`,
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(body),
+        })
+            .then((response) => response.json())
+            .then((data) => {
+                setSubmitting(false);
+                if (data.message) {
+                    onClickModify("");
+                }
+            })
+            .catch(() => {
+                setData("Invalid values");
+                setSubmitting(false);
+            });
+    };
+
+    return (
         <>
             <h2>Modify a User</h2>
-            <form onSubmit={handleClick} className="formModifyUser">
-                <div>
-                    <input type="text" onChange={(event) => { handleChange(event, 'id') }} placeholder="ID of the user" />
-                </div>
-                <div>
-                    <input type="text" onChange={(event) => { handleChange(event, 'name') }} placeholder="Name" />
-                </div>
-                <div>
-                    <input type="number" onChange={(event) => { handleChange(event, 'age') }} placeholder="Age" />
-                </div>
-                <div>
-                    <input type="email" onChange={(event) => { handleChange(event, 'email') }} placeholder="Email" />
-                </div>
-                <div>
-                    <input type="password" onChange={(event) => { handleChange(event, 'password') }} placeholder="Password" />
-                </div>
-                <div>
-                    <input type="text" onChange={(event) => { handleChange(event, 'city') }} placeholder="City" />
-                </div>
+            {userData &&<Formik
+                initialValues={{
+                    name: userData.name,
+                    email: userData.email,
+                    password: "",
+                    age: userData.age,
+                    city: userData.city,
+                    allowOffers: userData.allowOffers,
+                }}
+                validationSchema={validationSchema}
+                onSubmit={handleSubmit}
+            >
+                {({ isSubmitting }) => (
+                    <Form className="formContainer">
+                        <div style={{ "position": "relative" }}>
+                            <Field
+                                type="text"
+                                name="name"
+                                placeholder="Name"
+                            />
+                            <ErrorMessage name="name" component="div" className="errorMessage" />
+                        </div>
 
-                <div className="interestsModifyUser">
-                    <input
-                        type="text"
-                        value={inputInterest}
-                        onChange={handleInterestChange}
-                        placeholder="Interests"
-                    />
-                    <button type="button" onClick={addInterest}>Add Interest</button>
-                </div>
-                <div>
-                    <label>AllowOffers </label>
-                    <input
-                        type="checkbox"
-                        checked={body.allowOffers}
-                        onChange={(event) => handleChange(event, 'allowOffers')}
-                    />
-                </div>
-                <button onClick={handleClick}>Submit</button>
-            </form>
+                        <div style={{ "position": "relative" }}>
+                            <Field
+                                type="number"
+                                name="age"
+                                placeholder="Age"
+                            />
+                            <ErrorMessage name="age" component="div" className="errorMessage" />
+                        </div>
+
+                        <div style={{ "position": "relative" }}>
+                            <Field
+                                type="email"
+                                name="email"
+                                placeholder="Email"
+                            />
+                            <ErrorMessage name="email" component="div" className="errorMessage" />
+                        </div>
+
+                        <div style={{ "position": "relative" }}>
+                            <Field
+                                type="password"
+                                name="password"
+                                placeholder="Password"
+                            />
+                            <ErrorMessage name="password" component="div" className="errorMessage" />
+                        </div>
+
+                        <div style={{ "position": "relative" }}>
+                            <Field
+                                type="text"
+                                name="city"
+                                placeholder="City"
+                            />
+                            <ErrorMessage name="city" component="div" className="errorMessage" />
+                        </div>
+
+                        <div className="arrayInputContainer">
+                            <input
+                                type="text"
+                                value={inputInterest}
+                                onChange={(e) => setInputInterest(e.target.value)}
+                                placeholder="Add Interest"
+                            />
+                            <button type="button" onClick={handleAddInterest}>
+                                Add Interest
+                            </button>
+                        </div>
+
+                        <ul>
+                            {interests.map((interest, index) => (
+                                <li key={index} style={{ display: "flex", alignItems: "center" }}>
+                                    {interest}
+                                    <button
+                                        type="button"
+                                        onClick={() => handleRemoveInterest(index)}
+                                        style={{ marginLeft: "10px", color: "red", cursor: "pointer" }}
+                                    >
+                                        Remove
+                                    </button>
+                                </li>
+                            ))}
+                        </ul>
+
+                        <div>
+                            <label>Allow Offers</label>
+                            <Field type="checkbox" name="allowOffers"/>
+                        </div>
+
+                        <button type="submit" disabled={isSubmitting}>
+                            Submit
+                        </button>
+                    </Form>
+                )}
+            </Formik>}
             <Message loginMessage={data} />
         </>
-    )
+    );
 }

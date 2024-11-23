@@ -33,6 +33,7 @@ const loginUser = async (req,res) =>{
         req = matchedData(req)
         const user = await userModel.findOne({email:req.email})
 
+        // Comprobar que el usuario existe
         if(!user){
             handleHttpError(res,"USER_NOT_EXISTS",403)
             return
@@ -42,6 +43,7 @@ const loginUser = async (req,res) =>{
         const hashedPassword = user.password
         const checkPassword = await compare(req.password,hashedPassword)
 
+        // Comprobar que la contraseña es correcta
         if(!checkPassword){
             handleHttpError(res,"INVALID_PASSWORD",403)
             return

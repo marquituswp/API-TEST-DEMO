@@ -11,7 +11,7 @@ export default function WebDetails({ webSent, handleWebList, islogged, urlUsed})
         setReviewInfo(webSent)
         fetch(urlUsed)
             .then(response => response.json())
-            .then(data => setReviewInfo(data.find(webitem=>webitem._id === webSent._id)))
+            .then(data => setReviewInfo(data.find(listItem=>listItem._id === webSent._id)))
             .catch(error => {
                 console.error("Error fetching data", error)
             })        
@@ -37,39 +37,43 @@ export default function WebDetails({ webSent, handleWebList, islogged, urlUsed})
     };
 
     if (!web) {
-        return <h2 className="noWebSelected">Ninguna Web seleccionada</h2>;
+        return <h2 className="noItemSelected">Ninguna Web seleccionada</h2>;
     } else {
         return (
-            <div className="webDetailContainer">
+            <div className="detailContainer">
                 <div>
                     <p className="resetButton" onClick={handleWebList}>{"<- Webs"}</p>
                     <div className="webInfo">
-                        <div className="webDetailItem">
+                        <div className="detailItem">
                             <span className="itemLabel">CIF:</span>
                             <span className="itemValue">{web.cifCommerce}</span>
                         </div>
-                        <div className="webDetailItem">
+                        <div className="detailItem">
                             <span className="itemLabel">City:</span>
                             <span className="itemValue">{web.city}</span>
                         </div>
-                        <div className="webDetailItem">
+                        <div className="detailItem">
                             <span className="itemLabel">Activity:</span>
                             <span className="itemValue">{web.activity}</span>
                         </div>
-                        <div className="webDetailItem">
+                        <div className="detailItem">
                             <span className="itemLabel">Title:</span>
                             <span className="itemValue">{web.title}</span>
                         </div>
-                        <div className="webDetailItem">
+                        <div className="detailItem">
                             <span className="itemLabel">Summary:</span>
                             <span className="itemValue">{web.summary}</span>
                         </div>
-                        <div className="webDetailItem">
+                        <div className="detailItem">
                             <span className="itemLabel">Texts:</span>
-                            <span className="itemValue">{web.texts}</span>
+                            <div className="textContainer">
+                            {web.texts.map((text, index) => (
+                                <span key={index} className="itemValue">{text}</span>
+                            ))}
+                        </div>
                         </div>
                     </div>
-                    <div className="webDetailItem">
+                    <div className="detailItem">
                         <span className="itemLabelImage">Images:</span>
                     </div>
                     <div className="webImages">

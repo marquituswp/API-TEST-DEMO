@@ -1,9 +1,8 @@
-import "../../styles/FormAuth.css"
 export default function Message ({loginMessage}){
     
     return(
         <>
-            <div className="messageAuth">
+            <div className="messageResponse">
                 {loginMessage}
             </div>
         </>

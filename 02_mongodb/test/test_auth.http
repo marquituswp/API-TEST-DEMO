@@ -1,3 +1,4 @@
+// Tests para la autenticación de usuarios (COMPLETO EN EL PNPM TEST)
 ###
 POST http://localhost:3000/auth/register HTTP/1.1
 Content-Type: application/json

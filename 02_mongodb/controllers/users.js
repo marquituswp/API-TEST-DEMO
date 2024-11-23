@@ -18,28 +18,21 @@ const getUsers = async (req,res)=>{
 // Función para modificar un usuario
 const modifyUsers = async (req,res) =>{
     try{
-        const {id, ...body} = matchedData(req)
-        // encripto la contraseña (si la modifica)
+        const {...body} = matchedData(req)
+        // Obtengo el id del usuario logueado desde el token
+        const id = req.user._id
+        // Compruebo que el usuario exista
         const user = await userModel.findById({_id:id})
         if(!user){
             handleHttpError(res,"USER_NOT_FOUND",403)
             return
         }
-        // Compruebo que el usuario que intenta borrar sea el mismo que el logueado (solo se puede borrar a uno mismo)
-        if (user.email !== req.user.email){
-            handleHttpError(res,"CAN'T_UPDATE_OTHERS",403)
-            return
-        }
+        // Compruebo si se ha modificado la contraseña, en caso afirmativo la encripto
         if(body.password){
             const hashedPassword = await encrypt(body.password)
             body.password = hashedPassword
         }
-        // añado los intereses nuevos al array de intereses
-        if(body.interests){
-            
-            const userInterests = await userModel.findById(id,{interests:1})
-            body.interests = [...userInterests.interests,...body.interests]
-        }
+        // Actualizo el usuario
         const data = await userModel.findByIdAndUpdate(id,body,{new:true})
 
         res.status(200).json({message:"User updated",
@@ -54,16 +47,11 @@ const modifyUsers = async (req,res) =>{
 // Función para eliminar un usuario
 const deleteUser = async (req,res) =>{
     try{
-        const {id} = matchedData(req)
+        const id = req.user._id
         // Compruebo que el usuario exista
         const user = await userModel.findById({_id:id})
         if(!user){
             handleHttpError(res,"USER_NOT_FOUND",403)
-            return
-        }
-        // Compruebo que el usuario que intenta borrar sea el mismo que el logueado (solo se puede borrar a uno mismo)
-        if (user.email !== req.user.email){
-            handleHttpError(res,"CAN'T_DELETE_OTHERS",403)
             return
         }
         // Borro el usuario
@@ -93,11 +81,14 @@ const modifyUserRole = async (req,res)=>{
 // Función para obtener los comercios de una ciudad
 const getWebCity = async (req,res) =>{
     try{
+        // Obtengo los datos 
         const {city,interests} = matchedData(req)
         const order = req.query.order
-        const cityRegex = new RegExp(city, "i"); // "i" para búsqueda insensible a mayúsculas/minúsculas
+        // Creo una expresión regular para buscar la ciudad y los intereses solo por una letra
+        const cityRegex = new RegExp(city, "i"); 
         const interestsRegex = new RegExp(interests, "i");
         let webs=null
+        // Busco web en funcion de que se haya pasado la ciudad y los intereses
         if(city !== "{city}" && interests !== "{interests}"){
             webs = await webModel.find({ city: cityRegex,activity: interestsRegex });
         }else if(interests !== "{interests}"){
@@ -113,13 +104,13 @@ const getWebCity = async (req,res) =>{
             handleHttpError(res,"NO_COMMERCES",403)
             return
         }
+        // Ordeno los comercios en funcion de los reviews
         if (order === "true") {
             // Ordenar de mayor a menor en base a `reviews.scoring`
             webs.sort((a, b) => {
-            // Asegúrate de que haya al menos un review para cada web
-            const scoreA = (a.reviews && a.reviews.length > 0) ? a.reviews[0].scoring : 0; // Primer scoring
-            const scoreB = (b.reviews && b.reviews.length > 0) ? b.reviews[0].scoring : 0; // Primer scoring
-            return scoreB - scoreA; // Ordena de mayor a menor
+            const scoreA = (a.reviews && a.reviews.length > 0) ? a.reviews[0].scoring : 0; 
+            const scoreB = (b.reviews && b.reviews.length > 0) ? b.reviews[0].scoring : 0; 
+            return scoreB - scoreA; 
         });
           }
         res.status(200).json(webs)
@@ -137,6 +128,7 @@ const reviewWeb = async (req,res) => {
         // Compruebo que la web existe
         if(!web){
             handleHttpError(res,"WEB_NOT_FOUND",403)
+            return
         }
         // Añado la review a la web
         const reviews_data = web.reviews
@@ -146,7 +138,9 @@ const reviewWeb = async (req,res) => {
             review:review
         }
         reviews_data.push(data)
+        // Calculo la media de las reviews
         const webPoints = reviews_data.map(review => review.scoring).reduce((a,b)=>a+b,0)/reviews_data.length
+        // Actualizo la web con las reviews y los puntos
         const webReviewed = await webModel.findByIdAndUpdate({_id:webId},{reviews:reviews_data,points:webPoints},{new:true})
         res.status(200).json({message: "Web Reviewed" , web: webReviewed})
 

@@ -8,6 +8,7 @@ const tokensign = async (user)=>{
 
     const sign = jwt.sign(
         {
+            // Datos que se quieren guardar en el token del usuario
             _id:user._id,
             role:user.role
         },
@@ -24,11 +25,12 @@ const tokenSignCommerce = async (commerce)=>{
 
     const sign = jwt.sign(
         {
+            // Datos que se quieren guardar en el token del comercio
             cif:commerce.cif
         },
         JWT_SECRET,
         {
-            expiresIn:"24h"
+            expiresIn:"1y"
         }
     )
     return sign
@@ -37,7 +39,6 @@ const tokenSignCommerce = async (commerce)=>{
 // Función para verificar un token
 const verifyToken = async (tokenJwt) =>{
     try {
-
         return jwt.verify(tokenJwt, JWT_SECRET)
 
     } catch (err) {

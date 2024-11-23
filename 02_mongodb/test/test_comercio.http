@@ -1,3 +1,4 @@
+// Tests para el comercio (COMPLETO EN EL PNPM TEST)
 ### Obtener la lista de comercios
 GET http://localhost:3000/comercio 
 Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NzFiN2M4ODM2YjQ2ZjJjNDhiNDE0NTQiLCJyb2xlIjpbInVzZXIiXSwiaWF0IjoxNzI5ODU1MzkzLCJleHAiOjE3Mjk5NDE3OTN9.UN8UoL8j1uTJnYWIAA5uXsS_YAy9WHCJEU70YZ00t6Q

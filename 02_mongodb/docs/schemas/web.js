@@ -47,6 +47,7 @@ module.exports = {
             },
         }
     },
+    // Esquema de respuesta al crear una web
     WebCreated:{
         type:"object",
         properties:{
@@ -93,6 +94,7 @@ module.exports = {
             },
         }
     },
+    // Esquema de respuesta al obtener usuarios interesados en una web
     WebUsers:{
         type:"object",
         properties:{
@@ -106,6 +108,7 @@ module.exports = {
             }
         }
     },
+    // Esquema de respuesta al borrar una web (físicamente)
     WebDelete:{
         type:"object",
         properties:{
@@ -115,6 +118,7 @@ module.exports = {
             }
         }
     },
+    // Esquema de respuesta al restaurar una web
     WebRestored:{
         type:"object",
         properties:{

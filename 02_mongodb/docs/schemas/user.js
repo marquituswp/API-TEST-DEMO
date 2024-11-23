@@ -61,6 +61,7 @@ module.exports = {
             },
         }
     },
+    // Esquema para actualizar un usuario
     UserUpdate:{
         type:"object",
         properties:{
@@ -102,6 +103,7 @@ module.exports = {
             }
         }
     },
+    // Esquema para actualizar el rol de un usuario
     UserUpdateRole:{
         type:"object",
         properties:{
@@ -111,6 +113,7 @@ module.exports = {
             }
         }
     },
+    // Esquema para borrar un usuario
     UserDelete:{
         type:"object",
         properties:{
@@ -120,6 +123,7 @@ module.exports = {
             }
         }
     },
+    // Esquema respuesta a review de una web
     UserReviewWeb:{
         type:"object",
         properties:{

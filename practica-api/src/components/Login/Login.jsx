@@ -1,67 +1,86 @@
 import { useState } from "react";
+import { Formik, Form, Field, ErrorMessage } from "formik";
+import * as Yup from "yup";
 import Message from "./Message";
-import "../../styles/FormAuth.css"
-export default function Login({ setLoggedLogin,setNameLogin }) {
-    const [data, setData] = useState("")
-    const [body, setBody] = useState({
-        email: "",
-        password: "",
-    })
 
-    const handleChange = (event, field) => {
-        const data = event.target.value
+export default function Login({ setLoggedLogin, setNameLogin }) {
+    const [data, setData] = useState("");
 
-        setBody({
-            ...body,
-            [field]: data
+    // Yup validation schema
+    const validationSchema = Yup.object({
+        email: Yup.string().email("Invalid email").required("Email is required"),
+        password: Yup.string()
+            .required("Password is required"),
+    });
+
+    const handleSubmit = (values, { setSubmitting }) => {
+        const { email, password } = values;
+        const body = { email, password };
+
+        fetch("http://localhost:3000/auth/login", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(body),
         })
-    }
-
-
-
-    const handleClick = (event) => {
-        try {
-            event.preventDefault()
-            fetch("http://localhost:3000/auth/login", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify(body)
+            .then(response => response.ok ? response.json():response.text())
+            .then(data => {
+                if (data.token) {
+                    setLoggedLogin(true);
+                    const token = data.token;
+                    localStorage.setItem('token', token);
+                    setNameLogin(data.user.name);
+                } else{
+                    setData(data)
+                }
             })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.token){
-                        setLoggedLogin(true)
-                        const token = data.token
-                        localStorage.setItem('token', token)
-                        setNameLogin(data.user.name)
-                    }else{
-                        body.password.length <=9 ? setData("Insert Password lenght greather than 8"): setData("Invalid Values")
-                    }
-                    
-                })
-                .catch(() => { setData("USER_DON'T_EXISTS") })
-        } catch {
-            setData("Internal Error")
-        }
-
-
-    }
+            .catch(() => {
+                setData("ERROR_LOGIN");
+            })
+            .finally(() => {
+                setSubmitting(false);
+            });
+    };
 
     return (
         <>
             <h1>Login</h1>
-            <form onSubmit={handleClick} className="formLogin">
-                <div>
-                    <input type="email" onChange={(event) => { handleChange(event, 'email') }} placeholder="Email" />
-                </div>
-                <div>
-                    <input type="password" onChange={(event) => { handleChange(event, 'password') }} placeholder="Password" />
-                </div>
-                <button onClick={handleClick}>Submit</button>
-            </form>
+            <Formik
+                initialValues={{
+                    email: "",
+                    password: "",
+                }}
+                validationSchema={validationSchema}
+                onSubmit={handleSubmit}
+            >
+                {({ isSubmitting }) => (
+                    <Form className="formContainer">
+                        <div style={{ "position": "relative" }}>
+                            <Field
+                                type="email"
+                                name="email"
+                                placeholder="Email"
+                            />
+                            <ErrorMessage name="email" component="div" className="errorMessage" />
+                        </div>
+
+                        <div style={{ "position": "relative" }}>
+                            <Field
+                                type="password"
+                                name="password"
+                                placeholder="Password"
+                            />
+                            <ErrorMessage name="password" component="div" className="errorMessage" />
+                        </div>
+
+                        <button type="submit" disabled={isSubmitting}>
+                            Submit
+                        </button>
+                    </Form>
+                )}
+            </Formik>
             <Message loginMessage={data} />
         </>
-    )
+    );
 }

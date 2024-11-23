@@ -1,6 +1,6 @@
 // Rutas de web
 const express= require("express")
-const {validatorCreateWeb,validatorDeleteWeb,validatorGetWeb,validatorUpdateWeb,validatorRestoreWeb,validatorGetWebs} = require("../validators/web")
+const {validatorCreateWeb,validatorGetWeb,validatorUpdateWeb,validatorGetWebs} = require("../validators/web")
 const router = express.Router()
 const uploadMiddleware = require("../utils/handleUpload")
 // Importamos el middleware de autenticación de comercio, solo los comercios pueden acceder a sus webs
@@ -140,24 +140,17 @@ router.get("/:id",validatorGetWeb,getWebById)
 */
 router.post("/",authCommerce,validatorCreateWeb,createWeb)
 
-// RUTA PUT /web/{id}
+// RUTA PUT /web
 /**
 *   @openapi
-*   /web/{id}:
+*   /web:
 *   put:
 *       tags:
 *       - Web
-*       summary: Update Web by ID
+*       summary: Update Web
 *       description: Update a Commerce Web, the Commerce TOKEN of the Web is required
 *       security:
 *           - bearerAuth: []
-*       parameters:
-*           - in: path
-*             name: id
-*             schema: 
-*                type: string
-*             required: true
-*             description: The ID of the Web
 *       requestBody:
 *           content:
 *               application/json:
@@ -183,26 +176,20 @@ router.post("/",authCommerce,validatorCreateWeb,createWeb)
 *                       schema:
 *                           $ref: "#/components/schemas/Errors/NotToken"
 */
-router.put("/:id",authCommerce,validatorUpdateWeb,updateWeb)
+router.put("/",authCommerce,validatorUpdateWeb,updateWeb)
 
-// RUTA DELETE /web/{id}
+// RUTA DELETE /web
 /**
 *   @openapi
-*   /web/{id}:
+*   /web:
 *   delete:
 *       tags:
 *       - Web
-*       summary: Delete Web by ID
-*       description: Delte a Commerce Web by its ID, the Commerce Token is required
+*       summary: Delete Web 
+*       description: Delte the Commerce Web , the Commerce Token is required
 *       security:
 *           - bearerAuth: []
 *       parameters:
-*           - in: path
-*             name: id
-*             schema: 
-*                type: string
-*             required: true
-*             description: The ID of the Web
 *           - in: query
 *             name: hard
 *             schema:
@@ -230,12 +217,12 @@ router.put("/:id",authCommerce,validatorUpdateWeb,updateWeb)
 *                       schema:
 *                           $ref: "#/components/schemas/Errors/NotToken"
 */
-router.delete("/:id",authCommerce,validatorDeleteWeb,deleteWeb)
+router.delete("/",authCommerce,deleteWeb)
 
-// RUTA PATCH /web/{id}
+// RUTA PATCH /web
 /**
 *   @openapi
-*   /web/{id}:
+*   /web:
 *   patch:
 *       tags:
 *       - Web
@@ -243,13 +230,6 @@ router.delete("/:id",authCommerce,validatorDeleteWeb,deleteWeb)
 *       description: Upload an image or text to the Commerce Web, the Commerce Token is required
 *       security:
 *           - bearerAuth: []
-*       parameters:
-*           - in: path
-*             name: id
-*             schema: 
-*                type: string
-*             required: true
-*             description: The ID of the Web
 *       requestBody:
 *         content:
 *           multipart/form-data:
@@ -285,26 +265,19 @@ router.delete("/:id",authCommerce,validatorDeleteWeb,deleteWeb)
 *                       schema:
 *                           $ref: "#/components/schemas/Errors/NotToken"
 */
-router.patch("/:id",authCommerce,uploadMiddleware.single("image"),uploadImage)
+router.patch("/",authCommerce,uploadMiddleware.single("image"),uploadImage)
 
-// RUTA PATCH /web/restore/{id}
+// RUTA PATCH /web/restore
 /**
 *   @openapi
-*   /web/restore/{id}:
+*   /web/restore:
 *   patch:
 *       tags:
 *       - Web
-*       summary: Restore a Web by ID
-*       description: Restore a Commerce Web by its ID, the Commerce Token is required
+*       summary: Restore a Web
+*       description: Restore a Commerce Web, the Commerce Token is required
 *       security:
 *           - bearerAuth: []
-*       parameters:
-*           - in: path
-*             name: id
-*             schema: 
-*                type: string
-*             required: true
-*             description: The ID of the Web
 *       responses:
 *           '200':
 *               description: Return the Web info restored
@@ -325,6 +298,6 @@ router.patch("/:id",authCommerce,uploadMiddleware.single("image"),uploadImage)
 *                       schema:
 *                           $ref: "#/components/schemas/Errors/NotToken"
 */
-router.patch("/restore/:id",authCommerce,validatorRestoreWeb,restoreWeb)
+router.patch("/restore",authCommerce,restoreWeb)
 
 module.exports = router

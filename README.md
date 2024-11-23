@@ -23,5 +23,10 @@ Usar el comando `pnpm start` para iniciar el servidor
 
 # Frontend
 Usar el comando `pnpm install` para instalar las dependencias necesarias.
+Instalar los siguientes paquetes:
+- axios
+- yup
+- formik
+
 
 Usar el comando `pnpm run dev` para iniciar el servidor

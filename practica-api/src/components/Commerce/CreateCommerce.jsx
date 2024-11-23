@@ -1,14 +1,15 @@
+// Componente para crear un comercio
 import { useState } from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import Message from "../Login/Message";
 import '../../styles/FormCreateCommerce.css'
 
-export default function CreateCommerce({ handleBack }) {
+export default function CreateCommerce({ handleBack }) { // Se recibe la función handleBack para volver a la página anterior
     const [data, setData] = useState("");
     const [tokenCommerce, setTokenCommerce] = useState(null);
 
-    // Yup validation schema
+    // Validación de los campos del formulario
     const validationSchema = Yup.object({
         name: Yup.string().required("Name is required"),
         cif: Yup.string()
@@ -23,6 +24,7 @@ export default function CreateCommerce({ handleBack }) {
         page_id: Yup.string().required("Page ID is required"),
     });
 
+    // Función que envía los datos del formulario al servidor
     const handleSubmit = (values, { setSubmitting }) => {
         const token = localStorage.getItem("token");
         
@@ -55,6 +57,7 @@ export default function CreateCommerce({ handleBack }) {
             });
     };
 
+    // Función que copia el token del comercio al portapapeles
     const handleToken = () => {
         navigator.clipboard.writeText(tokenCommerce)
             .then(() => {

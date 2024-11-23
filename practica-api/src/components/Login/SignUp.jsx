@@ -1,14 +1,15 @@
+// Componente SignUp
 import { useState } from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import Message from "./Message";
 
-export default function SignUpFormik({ setLoggedSignUp, setNameSignUp }) {
-    const [data, setData] = useState("");
-    const [interests, setInterests] = useState([]);
-    const [inputInterest, setInputInterest] = useState("");
+export default function SignUpFormik({ setLoggedSignUp, setNameSignUp }) { // setLoggedSignUp es una función que se ejecuta cuando se registra un usuario
+    const [data, setData] = useState(""); // Estado que guarda el mensaje de error o éxito
+    const [interests, setInterests] = useState([]); // Estado que guarda los intereses del usuario
+    const [inputInterest, setInputInterest] = useState(""); // Estado que guarda el valor del input de intereses
 
-    // Validation schema using Yup
+    // Esquema de validación de los campos del formulario
     const validationSchema = Yup.object({
         name: Yup.string()
             .min(3, "Name must be at least 3 characters")
@@ -26,6 +27,7 @@ export default function SignUpFormik({ setLoggedSignUp, setNameSignUp }) {
         allowOffers: Yup.boolean(),
     });
 
+    // Función que añade un interés al array de intereses
     const handleAddInterest = () => {
         if (inputInterest.trim() !== "") {
             setInterests([...interests, inputInterest.trim()]);
@@ -33,10 +35,12 @@ export default function SignUpFormik({ setLoggedSignUp, setNameSignUp }) {
         }
     };
 
+    // Función que elimina un interés del array de intereses
     const handleRemoveInterest = (index) => {
         setInterests(interests.filter((_, i) => i !== index));
     };
 
+    // Función que envía los datos del formulario al servidor
     const handleSubmit = (values, { setSubmitting }) => {
         const body = { ...values, interests };
         fetch("http://localhost:3000/auth/register", {
@@ -50,10 +54,10 @@ export default function SignUpFormik({ setLoggedSignUp, setNameSignUp }) {
             .then((data) => {
                 setSubmitting(false);
                 if (data.token) {
-                    setLoggedSignUp(true);
+                    setLoggedSignUp(true); // Ejecuta la función setLoggedSignUp
                     const token = data.token;
-                    localStorage.setItem("token", token);
-                    setNameSignUp(data.user.name);
+                    localStorage.setItem("token", token); // Guarda el token en el localStorage
+                    setNameSignUp(data.user.name); // Asigna el nombre del usuario al estado
                 } else {
                     setData(data);
                 }

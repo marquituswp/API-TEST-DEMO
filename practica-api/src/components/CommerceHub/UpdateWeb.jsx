@@ -1,13 +1,15 @@
-import { useEffect,useState } from "react";
+// Componente para actualizar una web
+import { useEffect, useState } from "react";
 import { jwtDecode } from "jwt-decode";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup"; // Importamos Yup
 import Message from "../Login/Message";
 
 export default function UpdateWeb({ token, handleBack }) {
-    const [data, setData] = useState("");
-    const [webUpdate,setWebUpdate] = useState(null)
-    // Yup validation schema
+    const [data, setData] = useState(""); // Mensaje de respuesta
+    const [webUpdate, setWebUpdate] = useState(null)  // Web a actualizar (para mostrar los valores actuales)
+
+    // Esquema de validación 
     const validationSchema = Yup.object({
         city: Yup.string().required("City is required"),
         activity: Yup.string().required("Activity is required"),
@@ -15,15 +17,16 @@ export default function UpdateWeb({ token, handleBack }) {
         summary: Yup.string().required("Summary is required"),
     });
 
+    // Obtener la web a actualizar
     useEffect(() => {
         const cif = jwtDecode(token).cif
 
         fetch(`http://localhost:3000/web/`, {
         })
-            .then(response => response.ok ? response.json():response.text())
+            .then(response => response.ok ? response.json() : response.text())
             .then((data) => {
-                data.map((web)=>{
-                    if(web.cifCommerce === cif){
+                data.map((web) => {
+                    if (web.cifCommerce === cif) {
                         setWebUpdate(web)
                     }
                 })
@@ -31,10 +34,10 @@ export default function UpdateWeb({ token, handleBack }) {
             .catch(() => {
                 setData("ERROR_FETCHING_DATA"); // Si hubo un error al hacer la petición
             });
-}, [token]); 
+    }, [token]);
 
+    // Función para enviar el formulario
     const handleSubmit = (values, { setSubmitting }) => {
-        // Preparar el cuerpo de la solicitud con los valores del formulario
         fetch(`http://localhost:3000/web/`, {
             method: "PUT",
             headers: {
@@ -49,7 +52,7 @@ export default function UpdateWeb({ token, handleBack }) {
             .then((data) => {
                 if (data._id) {
                     setData("Web Updated");
-                }else if (data.startsWith("{")) {
+                } else if (data.startsWith("{")) {
                     setData("Invalid values");
                 } else {
                     setData(data);
@@ -68,6 +71,7 @@ export default function UpdateWeb({ token, handleBack }) {
             <h2>Update a Web</h2>
             <p className="resetButton" onClick={handleBack}>{"<- HandleCommerce"}</p>
 
+            {/* Formulario para actualizar la web (se muestra cuando haya cargado la web a actualizar) */}
             {webUpdate && <Formik
                 initialValues={{
                     city: webUpdate.city,

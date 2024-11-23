@@ -1,15 +1,18 @@
+// Componente para eliminar una web
 import { useState } from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup"; // Importamos Yup
 import Message from "../Login/Message";
 export default function DeleteWeb({ token, handleBack }) {
-    const [data, setData] = useState("")
+    const [data, setData] = useState("") // Mensaje de respuesta
 
+    // Esquema de validación 
     const validationSchema = Yup.object({
         hard: Yup.boolean()
             .required("Please select hard delete option"), // Aunque el valor es booleano, siempre es bueno tenerlo en cuenta
     });
 
+    // Función para enviar el formulario
     const handleSubmit = (values, { setSubmitting }) => {
         try {
             fetch(`http://localhost:3000/web/?hard=${values.hard}`, {

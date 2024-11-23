@@ -1,15 +1,17 @@
+// Componente para modificar un usuario
 import { useEffect, useState } from "react";
 import { jwtDecode } from "jwt-decode";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import Message from "../Login/Message";
 
-export default function ModifyUser({ onClickModify }) {
-    const [data, setData] = useState("");
-    const [interests, setInterests] = useState([]);
-    const [inputInterest, setInputInterest] = useState("");
-    const [userData,setUserData]=useState(null)
+export default function ModifyUser({ onClickModify }) { // onClickModify es una función que se pasa como prop para cambiar el estado de la variable modify
+    const [data, setData] = useState(""); // Variable para mostrar mensajes de error
+    const [interests, setInterests] = useState([]); // Variable para guardar los intereses del usuario a modificar
+    const [inputInterest, setInputInterest] = useState(""); // Variable para guardar el interés que se está añadiendo
+    const [userData,setUserData]=useState(null) // Variable para guardar los datos del usuario a modificar
 
+    // Fetch para obtener los datos del usuario a modificar y mostrarlos en el formulario
     useEffect(()=>{
         try {
             const id = jwtDecode(localStorage.getItem('token'))._id
@@ -31,7 +33,7 @@ export default function ModifyUser({ onClickModify }) {
         }
     },[])
 
-    // Yup validation schema
+    // Validación de los campos del formulario
     const validationSchema = Yup.object({
         name: Yup.string()
             .min(3, "At least 3 characters")
@@ -46,6 +48,7 @@ export default function ModifyUser({ onClickModify }) {
         allowOffers: Yup.boolean(),
     });
 
+    // Funciones para añadir y eliminar intereses
     const handleAddInterest = () => {
         const trimmedInterest = inputInterest.trim();
         if (trimmedInterest && !interests.includes(trimmedInterest)) {
@@ -54,10 +57,12 @@ export default function ModifyUser({ onClickModify }) {
         }
     };
 
+    // Función para eliminar un interés
     const handleRemoveInterest = (index) => {
         setInterests(interests.filter((_, i) => i !== index));
     };
 
+    // Función para enviar los datos del formulario
     const handleSubmit = (values, { setSubmitting }) => {
         const token = localStorage.getItem("token");
         const body = { ...values, interests };
@@ -86,6 +91,7 @@ export default function ModifyUser({ onClickModify }) {
     return (
         <>
             <h2>Modify a User</h2>
+            {/** Formulario para modificar un usuario (solamente se muestra si se han obtenido los datos del usuario) */}
             {userData &&<Formik
                 initialValues={{
                     name: userData.name,

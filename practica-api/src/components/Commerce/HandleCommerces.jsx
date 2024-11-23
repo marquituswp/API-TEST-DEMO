@@ -1,17 +1,20 @@
+// Componente que muestra las opciones para manejar los comercios
 import { useState } from "react"
 import Commerces from './SeeCommerce'
 import DeleteCommerce from "./DeleteCommerce"
 import ModifyCommerce from "./ModifyCommerce"
 import CreateCommerce from "./CreateCommerce"
 export default function HandleCommerces() {
-    const [type, setType] = useState(null)
-    const [show, setShow] = useState(true)
+    const [type, setType] = useState(null) // Variable para controlar el tipo de acción a realizar
+    const [show, setShow] = useState(true) // Variable para controlar si se muestra el menú de opciones
 
+    // Función que muestra el menú de opciones
     const handleShow = () => {
         setShow(true)
         setType(null)
     }
 
+    // Función que controla el tipo de acción a realizar
     const handleClick = (value) => {
         setShow(false)
         setType(value)

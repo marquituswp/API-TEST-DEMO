@@ -1,11 +1,13 @@
+// Componente que muestra los detalles de una web seleccionada
 import { useState, useEffect } from 'react';
 import "../../styles/WebDetails.css"
 import ReviewWeb from '../ReviewWeb/Review';
-export default function WebDetails({ webSent, handleWebList, islogged, urlUsed}) {
-    const [web, setWeb] = useState(null);
-    const [reviewInfo,setReviewInfo] = useState(null)
-    const [review, setReview] = useState(false)
+export default function WebDetails({ webSent, handleWebList, islogged, urlUsed}) { // webSent es la web seleccionada, handleWebList es una función para volver a la lista de webs, islogged es un booleano que indica si el usuario está logueado
+    const [web, setWeb] = useState(null); // Estado para guardar la web seleccionada
+    const [reviewInfo,setReviewInfo] = useState(null) // Estado para guardar la información de la review
+    const [review, setReview] = useState(false) // Estado para mostrar el formulario de review
 
+    // Función para obtener la información de la web seleccionada
     useEffect(() => {
         setWeb(webSent);
         setReviewInfo(webSent)
@@ -15,23 +17,25 @@ export default function WebDetails({ webSent, handleWebList, islogged, urlUsed})
             .catch(error => {
                 console.error("Error fetching data", error)
             })        
-    }, [webSent,urlUsed,review]);
+    }, [webSent,urlUsed,review]); // Se ejecuta cada vez que cambia la web seleccionada o el estado de review
 
+    // Función para mostrar el formulario de review
     const handleReview = () => {
         setReview(!review)
     }    
 
+    // Función para mostrar las estrellas de la review
     const handlePoints = (points) => {
-        const fullStars = Math.floor(points);  // Full stars based on integer part
-        const hasHalfStar = points % 1 >= 0.25 && points % 1 < 0.75;  // Half star condition
-        const emptyStars = 5 - fullStars - (hasHalfStar ? 1 : 0); // Remaining empty stars
+        const fullStars = Math.floor(points);  
+        const hasHalfStar = points % 1 >= 0.25 && points % 1 < 0.75;  
+        const emptyStars = 5 - fullStars - (hasHalfStar ? 1 : 0); 
         
-        // Create an array with star components
+        
         return (
             <span className="starRating">
-                {" ★".repeat(fullStars)}  {/* Full Stars */}
-                {hasHalfStar ? "☆" : ""}  {/* Half Star if needed */}
-                {" ☆".repeat(emptyStars)} {/* Empty Stars */}
+                {" ★".repeat(fullStars)}  
+                {hasHalfStar ? "☆" : ""}  
+                {" ☆".repeat(emptyStars)} 
             </span>
         );
     };
@@ -103,10 +107,13 @@ export default function WebDetails({ webSent, handleWebList, islogged, urlUsed})
 
                     </div>
                 </div>
+                {/** Botón para dejar una review (solo si el usuario está logueado) */}
                 {islogged && <button className='reviewButton' onClick={handleReview}>Leave a Review</button>}
+                {/** Modal para dejar una review */}
                 {review && <div className={`modalOverlay ${review ? "active" : ""}`}>
                     <div className='reviewFormContainer'>
                         
+                        {/** Componente para dejar una review */}
                         <ReviewWeb webId={web._id} reviewed={setReview}/>
                         <p className='closeButton' onClick={handleReview}>X</p>
                     </div>

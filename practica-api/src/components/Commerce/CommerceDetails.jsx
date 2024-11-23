@@ -1,14 +1,18 @@
+// Componente que muestra los detalles de un comercio seleccionado
 import { useState, useEffect } from 'react';
 export default function CommerceDetails({ commerceSent, handlecommerceList}) {
     const [commerce, setCommerce] = useState(null);
 
+    // Actualiza el estado del comercio seleccionado cuando se recibe un nuevo comercio
     useEffect(() => {
         setCommerce(commerceSent);     
     }, [commerceSent]);
 
+    // Si no hay comercio seleccionado, se muestra un mensaje
     if (!commerce) {
         return <h2 className="noItemSelected">Ninguna Commerce seleccionada</h2>;
     } else {
+        // Si hay comercio seleccionado, se muestran sus detalles
         return (
             <div className="detailContainer">
                 <div>

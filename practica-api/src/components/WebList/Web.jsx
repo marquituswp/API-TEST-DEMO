@@ -1,16 +1,18 @@
+// Componente que muestra la lista de webs y permite seleccionar una de ellas para ver sus detalles
 import { useEffect, useState, useCallback } from "react";
 import WebDetails from "./WebDetails";
 import CityInput from "./CityInput";
 import InterestInput from "./InterestInput";
 import ButtonOrder from "./ButtonOrder";
-export default function WebPages({ islogged }) {
-    const [webs, setWebs] = useState([])
-    const [webSelected, setWebSelected] = useState(null)
-    const [error, setError] = useState(false)
-    const [order, setButtonOrder] = useState(false)
-    const [cityInput, setCityInput] = useState("");
-    const [interestInput, setInterestInput] = useState("");
+export default function WebPages({ islogged }) { // islogged es un booleano que indica si el usuario está logueado
+    const [webs, setWebs] = useState([]) // Estado para guardar la lista de webs
+    const [webSelected, setWebSelected] = useState(null) // Estado para guardar la web seleccionada
+    const [error, setError] = useState(false) // Estado para manejar errores
+    const [order, setButtonOrder] = useState(false) // Estado para ordenar la lista de webs
+    const [cityInput, setCityInput] = useState(""); // Estado para guardar la ciudad ingresada
+    const [interestInput, setInterestInput] = useState(""); // Estado para guardar el interés ingresado
 
+    // Función para obtener la URL de la API según los filtros y el orden seleccionados
     const getUrl = useCallback(() => {
         if (cityInput && interestInput) {
             return order
@@ -30,6 +32,7 @@ export default function WebPages({ islogged }) {
             : "http://localhost:3000/web";
     }, [cityInput, interestInput, order]);
 
+    // Función para obtener la lista de webs
     useEffect(() => {
         const url = getUrl();
         fetch(url)
@@ -43,6 +46,7 @@ export default function WebPages({ islogged }) {
 
     let selectWeb = null
 
+    // Muestra la lista de webs si no hay errores
     if (error) {
         selectWeb = <p style={{ textAlign: "center" }}>Error al cargar la lista de Webs</p>
     } else {
@@ -57,6 +61,7 @@ export default function WebPages({ islogged }) {
         ))
     }
 
+    // Función para manejar el evento de volver a la lista de webs
     const handleWebList = () => {
         setWebSelected(null)
     }
@@ -64,6 +69,7 @@ export default function WebPages({ islogged }) {
     return (
         <div className="itemsList">
             <h3 className="listTitle">Web Pages</h3>
+            {/** Sección de filtros */}
             {!webSelected && <div className="searchSection">
                 <CityInput setCityInput={setCityInput} />
                 <InterestInput setInterestInput={setInterestInput} />
@@ -74,6 +80,7 @@ export default function WebPages({ islogged }) {
                 {!webSelected && selectWeb}
             </div>
 
+            {/** Sección de detalles de la web */}
             {webSelected && <WebDetails webSent={webSelected} handleWebList={handleWebList} islogged={islogged} urlUsed={getUrl()} />}
         </div>
     )

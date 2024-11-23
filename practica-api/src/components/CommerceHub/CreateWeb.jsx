@@ -1,14 +1,15 @@
+// Componente para crear una web
 import { useState } from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup"; // Importamos Yup
 import Message from "../Login/Message";
 
 export default function CreateWeb({ token, handleBack }) {
-    const [texts, setTexts] = useState([]);
-    const [inputText, setInputText] = useState("");
-    const [data, setData] = useState("");
+    const [texts, setTexts] = useState([]); // Lista de textos a añadir
+    const [inputText, setInputText] = useState("");  // Texto a añadir
+    const [data, setData] = useState(""); // Mensaje de respuesta
 
-    // Yup validation schema
+    // Validación de los campos del formulario
     const validationSchema = Yup.object({
         city: Yup.string().required("City is required"),
         activity: Yup.string().required("Activity is required"),
@@ -17,6 +18,7 @@ export default function CreateWeb({ token, handleBack }) {
         texts: Yup.array().of(Yup.string().required("Each text is required")),
     });
 
+    // Añadir un texto a la lista
     const addText = () => {
         if (inputText.trim() !== "") {
             setTexts([...texts, inputText.trim()]);
@@ -24,12 +26,13 @@ export default function CreateWeb({ token, handleBack }) {
         }
     };
 
+    // Eliminar un texto de la lista
     const handleRemoveText = (index) => {
         setTexts(texts.filter((_, i) => i !== index));
     };
 
+    // Función para enviar el formulario
     const handleSubmit = (values, { setSubmitting }) => {
-        // Prepare the body to send the request
         const body = { ...values, texts: texts };
         fetch(`http://localhost:3000/web/`, {
             method: "POST",
@@ -74,7 +77,7 @@ export default function CreateWeb({ token, handleBack }) {
                 validationSchema={validationSchema}
                 onSubmit={handleSubmit}
             >
-                {({ isSubmitting, setFieldValue }) => (
+                {({ isSubmitting }) => (
                     <Form className="formContainer">
                         <div style={{position:"relative"}}>
                             <Field
@@ -109,6 +112,7 @@ export default function CreateWeb({ token, handleBack }) {
                             <ErrorMessage name="summary" component="div" className="errorMessage" />
                         </div>
 
+                        {/* Añadir textos */}
                         <div className="arrayInputContainer">
                             <input
                                 type="text"

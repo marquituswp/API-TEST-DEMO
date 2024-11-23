@@ -1,18 +1,20 @@
+// Componente de Login
 import { useState } from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import Message from "./Message";
 
-export default function Login({ setLoggedLogin, setNameLogin }) {
+export default function Login({ setLoggedLogin, setNameLogin }) { // setLoggedLogin es una función que se ejecuta cuando se inicia sesión
     const [data, setData] = useState("");
 
-    // Yup validation schema
+    // Esquema de validación de los campos del formulario
     const validationSchema = Yup.object({
         email: Yup.string().email("Invalid email").required("Email is required"),
         password: Yup.string()
             .required("Password is required"),
     });
 
+    // Función que envía los datos del formulario al servidor
     const handleSubmit = (values, { setSubmitting }) => {
         const { email, password } = values;
         const body = { email, password };

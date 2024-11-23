@@ -1,8 +1,10 @@
+// Componente para eliminar un usuario
 import { useState } from "react";
 import Message from "../Login/Message";
-export default function DeleteUser({ onClickDelete }) {
-    const [data, setData] = useState("")
+export default function DeleteUser({ onClickDelete }) { // onClickDelete es una función que se ejecuta cuando se elimina el usuario
+    const [data, setData] = useState("") // Mensaje de error
 
+    // Petición DELETE a la API para eliminar un usuario
     const handleClick = (event) => {
         try {
             const token = localStorage.getItem('token')

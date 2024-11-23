@@ -1,12 +1,14 @@
+// Componente para ver los comercios
 import { useEffect, useState, useCallback } from "react";
 import ButtonOrder from "../WebList/ButtonOrder";
 import CommerceDetails from "./CommerceDetails";
-export default function Commerces({handleBack}) {
-    const [commerces, setCommerces] = useState([])
-    const [commerceSelected, setCommerceSelected] = useState(null)
-    const [error, setError] = useState(false)
+export default function Commerces({handleBack}) { // Se recibe la función handleBack para volver a la página anterior
+    const [commerces, setCommerces] = useState([]) // Lista de comercios
+    const [commerceSelected, setCommerceSelected] = useState(null) // Comercio seleccionado
+    const [error, setError] = useState(false) // Variable para controlar errores
     const [order, setButtonOrder] = useState(false)
 
+    // Función para obtener la URL de la API
     const getUrl = useCallback(() => {
         
         return order
@@ -14,6 +16,7 @@ export default function Commerces({handleBack}) {
             : "http://localhost:3000/comercio";
     }, [order]);
 
+    // Se obtienen los comercios
     useEffect(() => {
         try{
             const token = localStorage.getItem("token")
@@ -38,9 +41,11 @@ export default function Commerces({handleBack}) {
 
     let selectcommerce = null
 
+    // Se muestra un mensaje de error si no se pueden cargar los comercios
     if (error) {
         selectcommerce = <p style={{ textAlign: "center" }}>Error al cargar la lista de Comercios</p>
     } else {
+        // Se muestra la lista de comercios
         selectcommerce = commerces.map((commerce, index) => (
             <div key={index} className="listItem">
                 <button className="itemSelect" onClick={() => setCommerceSelected(commerce)}>
@@ -60,7 +65,7 @@ export default function Commerces({handleBack}) {
         <div className="itemsList">
             
             <h3 className="listTitle">Commerces</h3>
-            
+            {/* Mostramos los comercios disponibles si no ha seleccionado uno */}
             {!commerceSelected && <div className="searchSection">
                 <p className="resetButton" onClick={handleBack}>{"<- HandleCommerce"}</p>
                 <ButtonOrder setButtonOrder={setButtonOrder} type={"CIF"} />
@@ -71,6 +76,7 @@ export default function Commerces({handleBack}) {
                 {!commerceSelected && selectcommerce}
             </div>
 
+            {/* Mostramos los detalles del comercio seleccionado */}
             {commerceSelected && <CommerceDetails commerceSent={commerceSelected} handlecommerceList={handlecommerceList} />}
         </div>
     )

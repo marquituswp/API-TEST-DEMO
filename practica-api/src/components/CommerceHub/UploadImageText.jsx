@@ -1,22 +1,23 @@
-import { useEffect,useState } from "react";
+// Componente para subir una imagen y textos a la web
+import { useEffect, useState } from "react";
 import { jwtDecode } from "jwt-decode";
 import Message from "../Login/Message";
 export default function UploadImageText({ token, handleBack }) {
-    const [data, setData] = useState("");
-    const [interests, setInterests] = useState([]);
-    const [inputInterest, setInputInterest] = useState("");
+    const [data, setData] = useState(""); // Mensaje de error o éxito
+    const [interests, setInterests] = useState([]); // Almacena los intereses (mostrar los que ya existen)
+    const [inputInterest, setInputInterest] = useState(""); // Almacena el interés temporal
     const [imageFile, setImageFile] = useState(null); // Almacena el archivo seleccionado
 
-
+    // Carga los intereses de la web
     useEffect(() => {
         const cif = jwtDecode(token).cif
 
         fetch(`http://localhost:3000/web/`, {
         })
-            .then(response => response.ok ? response.json():response.text())
+            .then(response => response.ok ? response.json() : response.text())
             .then((data) => {
-                data.map((web)=>{
-                    if(web.cifCommerce === cif){
+                data.map((web) => {
+                    if (web.cifCommerce === cif) {
                         setInterests(web.texts)
                     }
                 })
@@ -24,12 +25,14 @@ export default function UploadImageText({ token, handleBack }) {
             .catch(() => {
                 setData("ERROR_FETCHING_DATA"); // Si hubo un error al hacer la petición
             });
-}, [token]); 
+    }, [token]);
 
+    // Actualiza el interés temporal
     const handleInterestChange = (event) => {
         setInputInterest(event.target.value); // Actualiza el interés temporal
     };
 
+    // Añade un interés a la lista
     const addInterest = () => {
         if (inputInterest.trim()) {
             setInterests([...interests, inputInterest.trim()]);
@@ -37,10 +40,12 @@ export default function UploadImageText({ token, handleBack }) {
         }
     };
 
+    // Elimina un interés de la lista
     const removeInterest = (indexToRemove) => {
         setInterests(interests.filter((_, index) => index !== indexToRemove)); // Filtra el texto a eliminar
     };
 
+    // Actualiza el archivo seleccionado
     const handleFileChange = (event) => {
         const file = event.target.files[0];
         if (file) {
@@ -48,6 +53,7 @@ export default function UploadImageText({ token, handleBack }) {
         }
     };
 
+    // Sube la imagen y los textos a la web
     const handleClick = async (event) => {
         try {
             event.preventDefault();
@@ -56,16 +62,17 @@ export default function UploadImageText({ token, handleBack }) {
                 return;
             }
 
+            // Crea un objeto FormData con la imagen y los textos
             const formData = new FormData();
             formData.append("image", imageFile);
             interests.forEach((interest, index) => {
-                formData.append(`text[${index}]`, interest); 
+                formData.append(`text[${index}]`, interest);
             });
 
             const response = await fetch(`http://localhost:3000/web/`, {
                 method: "PATCH",
                 headers: {
-                    'Authorization': `Bearer ${token}`, 
+                    'Authorization': `Bearer ${token}`,
                 },
                 body: formData,
             });
@@ -103,9 +110,9 @@ export default function UploadImageText({ token, handleBack }) {
                 <ul>
                     {interests.map((interest, index) => (
                         <li key={index} style={{ display: "flex", alignItems: "center" }}>
-                            {interest} 
-                            <button 
-                                type="button" 
+                            {interest}
+                            <button
+                                type="button"
                                 onClick={() => removeInterest(index)} // Llama a removeInterest
                                 style={{ marginLeft: "10px", color: "red", cursor: "pointer" }}
                             >

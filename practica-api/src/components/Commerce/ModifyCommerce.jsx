@@ -1,13 +1,15 @@
+// Componente para modificar un comercio
 import { useEffect, useState } from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import Message from "../Login/Message";
 
-export default function ModifyCommerce({ handleBack }) {
-    const [data, setData] = useState("");
-    const [cif, setCif] = useState(""); // Guardamos el CIF ingresado
+export default function ModifyCommerce({ handleBack }) { // Se recibe la función handleBack para volver a la página anterior
+    const [data, setData] = useState(""); // Mensaje de respuesta del servidor
+    const [cif, setCif] = useState(""); // CIF del comercio a modificar
     const [commerceSelected, setCommerceSelected] = useState(null); // Información del comercio seleccionado
 
+    // Efecto que se ejecuta cuando cambia el CIF
     useEffect(() => {
         // Solo hacemos la solicitud si el CIF ha sido ingresado
         if (cif) {
@@ -22,7 +24,7 @@ export default function ModifyCommerce({ handleBack }) {
                 .then(response => response.ok ? response.json():response.text())
                 .then((data) => {
                     if (data._id) {
-                        setCommerceSelected(data); // Seteamos los datos del comercio
+                        setCommerceSelected(data); // Seteamos los datos del comercio seleccionado
                         setData(""); // Limpiamos mensajes de error
                     } else if(data.startsWith("{")){
                         setData("CIF_INVALID"); // Mensaje si no se encuentra el comercio
@@ -41,7 +43,7 @@ export default function ModifyCommerce({ handleBack }) {
         setCif(event.target.value);
     }
 
-    // Yup validation schema
+    // Validación de los campos del formulario
     const validationSchema = Yup.object({
         name: Yup.string().required("Name is required"),
         cif: Yup.string()
@@ -56,7 +58,7 @@ export default function ModifyCommerce({ handleBack }) {
         page_id: Yup.string().required("Page ID is required"),
     });
 
-    // Handle form submit
+    // Función que se ejecuta al enviar el formulario
     const handleSubmit = (values, { setSubmitting }) => {
         const token = localStorage.getItem("token");
 
@@ -89,9 +91,8 @@ export default function ModifyCommerce({ handleBack }) {
         <>
             <h2>Modify a Commerce</h2>
             <p className="resetButton" onClick={handleBack}>{"<- HandleCommerce"}</p>
-            
+            {/* Se debe ingresar el CIF del comercio a modificar y luego aparecerán los campos a modificar. */}
             <form className="formContainer">
-
                 <div>
                     <input type="text" onChange={(event) => { handleChange(event, 'cif') }} placeholder="CIF of your Commerce" />
                 </div>

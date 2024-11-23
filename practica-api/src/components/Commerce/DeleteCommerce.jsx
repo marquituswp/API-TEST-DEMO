@@ -1,12 +1,13 @@
+// Componente para eliminar un comercio
 import { useState } from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup"; // Importamos Yup
 import Message from "../Login/Message";
 
-export default function DeleteCommerce({ handleBack }) {
-    const [data, setData] = useState(""); // Mensaje de estado
+export default function DeleteCommerce({ handleBack }) { // Se recibe la función handleBack para volver a la página anterior
+    const [data, setData] = useState(""); // Mensaje de respuesta del servidor
 
-    // Validación con Yup
+    // Esquema de validación de los campos del formulario
     const validationSchema = Yup.object({
         cif: Yup.string()
             .length(9, "CIF must be 9 characters")
@@ -15,8 +16,10 @@ export default function DeleteCommerce({ handleBack }) {
             .required("Please select hard delete option"), // Aunque el valor es booleano, siempre es bueno tenerlo en cuenta
     });
 
+    // Función que envía los datos del formulario al servidor
     const handleSubmit = (values, { setSubmitting }) => {
         const token = localStorage.getItem('token');
+        // URL de la petición en función del valor de hard
         const url = values.hard ? 
             `http://localhost:3000/comercio/${values.cif}?hard=true` : 
             `http://localhost:3000/comercio/${values.cif}?hard=false`;

@@ -1,14 +1,17 @@
+// Componente para dejar una reseña a una web
 import { useState } from "react";
 import "../../styles/FormReview.css"
-export default function ReviewWeb({ webId,reviewed }) {
-    const [body, setBody] = useState({
+export default function ReviewWeb({ webId,reviewed }) { // reviewed es una función que se pasa como prop para cambiar el estado de la variable reviewed
+    // webId es el id de la web a la que se le va a dejar la reseña
+    const [body, setBody] = useState({ // Variable para guardar los datos de la reseña
         review: null,
         scoring: null
     })
 
+    // Función para cambiar el estado de la variable body
     const handleChange = (event, field) => {
         let data = event.target.value
-        if (field === "scoring"){
+        if (field === "scoring"){ // Si el campo es scoring, se convierte a número
             data = Number(data)
         }
         setBody({
@@ -17,9 +20,10 @@ export default function ReviewWeb({ webId,reviewed }) {
         })
     }
 
+    // Función para enviar la reseña
     const handleClick = (event) => {
         try {
-            const token = localStorage.getItem('token')
+            const token = localStorage.getItem('token') // Se obtiene el token del usuario del localStorage
             event.preventDefault()
             fetch(`http://localhost:3000/users/reviewWeb/${webId}`, {
                 method: "PUT",

@@ -1,6 +1,6 @@
 // Tests para la web (COMPLETO EN EL PNPM TEST)
 ### Obtener webs
-GET http://localhost:3000/web/
+GET http://localhost:3000/web/?order=true
 
 ### Obtener web por id
 GET http://localhost:3000/web/671bcfd3857881e71bd1e30b

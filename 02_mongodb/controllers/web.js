@@ -70,7 +70,7 @@ const updateWeb = async (req, res) => {
         const { ...web } = matchedData(req)
         // Comprobamos si la web existe
         const data = await webModel.findOne({ cifCommerce: req.commerce.cif }) // Buscamos la web por el cif del comercio
-        if (!data) {
+        if (!data || data.length === 0) {
             handleHttpError(res, "WEB_NOT_FOUND", 403)
             return
         }
@@ -92,7 +92,7 @@ const deleteWeb = async (req, res) => {
         const hardLowerCase = hard.toLowerCase()
         const data = await webModel.findOne({ cifCommerce: req.commerce.cif })
         //Si no existe la web, lanzamos un error
-        if (!data) {
+        if (!data || data.length === 0) {
             handleHttpError(res, "WEB_NOT_FOUND", 403)
             return
         }
@@ -202,18 +202,22 @@ const getUsersWeb = async (req, res) => {
     try {
         //Obtenemos las webs del comercio
         const webs = await webModel.find({ cifCommerce: req.commerce.cif })
-        if (!webs) {
+        if (!webs || webs.length === 0) {
             //Si no hay webs, lanzamos un error
             handleHttpError(res, "NOT_COMMERCE_WEBS", 403)
             return
         }
         //Extraemos las actividades de las webs
         const webActivities = webs.map(web => web.activity)
+        const webCities = webs.map(web => web.city)
         //Obtenemos los usuarios que tienen permitido recibir ofertas y que están interesados en las actividades de las webs del comercio
         const users = await userModel.find({
             allowOffers: true,
             interests: {
                 $in: webActivities.map(activity => new RegExp(activity, 'i')) // Busca coincidencias (surf, surfing, etc.)
+            },
+            city: {
+                $in: webCities.map(city => new RegExp(city, 'i')) // Busca coincidencias (Madrid, madrid, etc.)
             }
         });
         //Si no hay usuarios interesados, lanzamos un error

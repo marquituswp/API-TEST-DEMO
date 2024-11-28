@@ -28,12 +28,13 @@ export default function WebPages({ islogged }) { // islogged es un booleano que 
                 : `http://localhost:3000/users/web/{city}/${interestInput}`;
         }
         return order
-            ? `http://localhost:3000/web/?order=true`
-            : "http://localhost:3000/web";
+            ? "http://localhost:3000/users/web/{city}/?order=true"
+            : "http://localhost:3000/web/?order=false";
     }, [cityInput, interestInput, order]);
 
     // Función para obtener la lista de webs
     useEffect(() => {
+        setError(false);
         const url = getUrl();
         fetch(url)
             .then(response => response.json())

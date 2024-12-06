@@ -1,9 +1,10 @@
+// Componente para manejar los puntos de una valoración
 export default function HandlePoints({points}) {
     const fullStars = Math.floor(points);
     const hasHalfStar = points % 1 >= 0.25 && points % 1 < 0.75;
     const emptyStars = 5 - fullStars - (hasHalfStar ? 1 : 0);
 
-
+    // Devuelve un array con los iconos de las estrellas
     return (
         <>
             {[...Array(fullStars)].map((_, index) => (

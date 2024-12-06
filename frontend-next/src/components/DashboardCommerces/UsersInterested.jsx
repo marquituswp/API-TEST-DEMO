@@ -4,8 +4,8 @@ import { useEffect, useState } from "react";
 import { useCommerce } from "@/context/CommerceContext";
 
 export default function UsersInterested({ token, handleBack }) {
-    const { tokenCommerce } = useCommerce();
-    const [errorMessage, setErrorMessage] = useState("");
+    const { tokenCommerce } = useCommerce(); // Token del comercio
+    const [errorMessage, setErrorMessage] = useState(""); // Mensaje de error
     const [users, setUsers] = useState(null); // Usuarios interesados en la web
 
     // Petición GET a la API para obtener los usuarios interesados en la web
@@ -20,7 +20,7 @@ export default function UsersInterested({ token, handleBack }) {
                 .then((data) => {
                     if (data.message === "USERS_INTERESTED:") {
                         setErrorMessage("");
-                        setUsers(data.emails);
+                        setUsers(data.emails); // Guardamos los usuarios interesados
                     } else {
                         setErrorMessage("NO_USERS");
                     }
@@ -36,8 +36,9 @@ export default function UsersInterested({ token, handleBack }) {
             <h2 className="text-3xl font-semibold text-gray-800 text-center mb-6">
                 Interested Users
             </h2>
-            <div className="mt-4">
+            <div className="mt-4">  
 
+                {/* Si hay usuarios interesados, los mostramos en una lista, si no, mostramos un mensaje de error */}
                 {users ? (
                     <ul className="space-y-2">
                         {users.map((user, index) => (

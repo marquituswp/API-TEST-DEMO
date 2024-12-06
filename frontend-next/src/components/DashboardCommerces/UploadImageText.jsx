@@ -7,9 +7,9 @@ import { Formik, Field, Form, ErrorMessage } from "formik";
 import * as Yup from "yup";
 
 export default function UploadImageText() {
-    const { tokenCommerce } = useCommerce();
-    const [successMessage, setSuccessMessage] = useState("");
-    const [errorMessage, setErrorMessage] = useState("");
+    const { tokenCommerce } = useCommerce(); // Token del comercio
+    const [successMessage, setSuccessMessage] = useState(""); // Mensaje de exito
+    const [errorMessage, setErrorMessage] = useState(""); // Mensaje de error
     const [interests, setInterests] = useState([]); // Almacena los intereses
     const [inputText, setInputText] = useState("");
     const [imageFile, setImageFile] = useState(null); // Almacena el archivo seleccionado
@@ -17,15 +17,15 @@ export default function UploadImageText() {
 
     // Carga los intereses de la web
     useEffect(() => {
-        if (!tokenCommerce) return;
+        if (!tokenCommerce) return; // Si no hay token, no hacemos nada
         const cif = jwtDecode(tokenCommerce).cif;
         fetch(`http://localhost:3000/web/`)
             .then((response) => (response.ok ? response.json() : response.text()))
             .then((data) => {
                 data.map((web) => {
                     if (web.cifCommerce === cif) {
-                        setWeb(web);
-                        setInterests(web.texts || []);
+                        setWeb(web); // Si la web es del comercio, la guardamos
+                        setInterests(web.texts || []); // Si hay textos, los guardamos
                     }else{
                         setErrorMessage("NO_WEB");
                     }
@@ -43,6 +43,7 @@ export default function UploadImageText() {
 
     const handleSubmit = async (values, { setSubmitting, setErrors }) => {
         try {
+            // Si no hay archivo, no hacemos nada (se tiene que seleccionar una imagen)
             if (!imageFile) {
                 setSubmitting(false);
                 return;
@@ -100,10 +101,12 @@ export default function UploadImageText() {
             <h2 className="text-3xl font-semibold text-gray-800 text-center mb-6">
                 Upload Image and Text
             </h2>
+
             {/* Mostrar mensaje de error si no se encuentra el comercio */}
             {errorMessage && !web && (
                 <div className="mb-4 text-red-700 text-2xl font-bold text-center">{errorMessage}</div>
             )}
+
             {web && <Formik
                 initialValues={{
                     textInput: "",
@@ -180,13 +183,14 @@ export default function UploadImageText() {
                             ))}
                         </ul>
 
-                        {/* General Error Message */}
+                        {/* Mensaje de error general */}
                         {errors.general && (
                             <div className="mb-4 text-red-700 text-2xl font-bold text-center">
                                 {errors.general}
                             </div>
                         )}
 
+                        {/* Mensaje de éxito */}
                         {successMessage && (
                             <div className="mb-4 text-green-700 font-bold text-2xl text-center">
                                 {successMessage}

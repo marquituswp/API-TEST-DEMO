@@ -5,11 +5,12 @@ import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import { useAuth } from "@/context/AuthContext";
 export default function CreateCommerce() {
-    const [successMessage, setSuccessMessage] = useState("");
-    const { token } = useAuth();
-    const [tokenCommerce, setTokenCommerce] = useState(null);
-    const [copied, setCopied] = useState(false);
+    const [successMessage, setSuccessMessage] = useState(""); // Estado para mostrar mensaje de éxito
+    const { token } = useAuth(); // Hook para el contexto de autenticación
+    const [tokenCommerce, setTokenCommerce] = useState(null); // Estado para el token del comercio
+    const [copied, setCopied] = useState(false); // Estado para saber si se ha copiado el token
 
+    // Validación con Yup
     const validationSchema = Yup.object({
         name: Yup.string().required("Name is required"),
         cif: Yup.string()
@@ -26,39 +27,46 @@ export default function CreateCommerce() {
 
     const handleSubmit = (values, { setSubmitting, setErrors }) => {
 
-        fetch(`http://localhost:3000/comercio/`, {
-            method: "POST",
-            headers: {
-                Authorization: `Bearer ${token}`,
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify(values),
-        })
-            .then((response) => (response.ok ? response.json() : response.text()))
-            .then((data) => {
-                if (data.errors) {
-                    setSuccessMessage("");
-                    setErrors({ general: "Invalid Values" });
-                }
-                if (data.token) {
-                    setTokenCommerce(data.token);
-                    setSuccessMessage("Commerce Created");
-                } else {
-                    setSuccessMessage("");
-                    setErrors({ general: data });
-                }
+        try {
+            fetch(`http://localhost:3000/comercio/`, {
+                method: "POST",
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(values),
             })
-            .catch(() => {
-                setSuccessMessage("");
-                setErrors({ general: "CIF is required" });
-            })
-            .finally(() => {
-                setSubmitting(false);
-            });
+                .then((response) => (response.ok ? response.json() : response.text()))
+                .then((data) => {
+                    if (data.errors) {
+                        setSuccessMessage(""); // Limpia el mensaje de éxito
+                        setErrors({ general: "Invalid Values" }); // Muestra un error general
+                    }
+                    if (data.token) {
+                        setTokenCommerce(data.token); // Guarda el token del comercio
+                        setSuccessMessage("Commerce Created"); // Muestra mensaje de éxito
+                    } else {
+                        setSuccessMessage(""); // Limpia el mensaje de éxito
+                        setErrors({ general: data }); // Muestra un error general
+                    }
+                })
+                .catch(() => {
+                    setSuccessMessage(""); // Limpia el mensaje de éxito
+                    setErrors({ general: "CIF is required" }); // Muestra un error general
+                })
+                .finally(() => {
+                    setSubmitting(false); // Cambia el estado de enviando a falso
+                });
+        } catch (error) {
+            setErrors({ general: "Invalid Values" }); // Muestra un error general
+        }
+
     };
 
+    // Función para manejar el token
     const handleToken = () => {
-        
+
+        // Copia el token al portapapeles
         navigator.clipboard.writeText(tokenCommerce).then(() => {
             handleToken(); // Llama a la función para manejar el token
             setCopied(true); // Cambia el estado a "copiado"
@@ -148,6 +156,7 @@ export default function CreateCommerce() {
                             />
                         </div>
 
+                        {/* Muestra un mensaje de error general */}
                         {errors.general && (
                             <div className="mb-4 text-red-700 text-2xl font-bold text-center">
                                 {errors.general}
@@ -168,11 +177,14 @@ export default function CreateCommerce() {
                 )}
             </Formik>
 
+            {/* Muestra un mensaje de éxito */}
             {successMessage && (
                 <div className="mb-4 text-green-700 font-bold text-2xl text-center">
                     {successMessage}
                 </div>
             )}
+
+            {/* Muestra el token del comercio */}
 
             {tokenCommerce && (
                 <button

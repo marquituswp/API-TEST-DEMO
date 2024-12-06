@@ -1,6 +1,7 @@
 "use client";
-import React, { useState } from "react";
+import { useState } from "react";
 
+// Componente de carrusel de imágenes
 const Carousel = ({ images }) => {
     const [currentIndex, setCurrentIndex] = useState(0);
 
@@ -26,6 +27,8 @@ const Carousel = ({ images }) => {
         <div className="w-full overflow-hidden rounded-lg shadow-lg p-6">
             {/* Contenedor de la imagen con transición */}
             <div className="flex items-center justify-center">
+
+                {/* Botón para la imagen anterior */}
                 {images.length > 1 && <button
                     onClick={handlePrev}
                     className="btn transform text-white rounded-full p-3 z-10 shadow-lg"
@@ -44,7 +47,7 @@ const Carousel = ({ images }) => {
                         />
                     </div>
 
-                    {/* Contenedor para la imagen siguiente (opcional) */}
+                    {/* Contenedor para la imagen siguiente (si hay) */}
                     {images.length > 1 && (
                         <div className="h-64 w-64 overflow-hidden flex items-center justify-center">
                             <img
@@ -57,6 +60,7 @@ const Carousel = ({ images }) => {
                     )}
                 </div>
 
+                {/* Botón para la siguiente imagen */}
                 {images.length > 1 && <button
                     onClick={handleNext}
                     className="btn right-4 rounded-full p-3 z-10 shadow-lg"

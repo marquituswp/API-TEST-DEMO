@@ -1,5 +1,4 @@
 "use client"
-// Componente SignUp
 import { useState } from "react";
 import React from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
@@ -7,8 +6,8 @@ import * as Yup from "yup";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/context/AuthContext";
-export default function SignUpFormik() { 
-    const { login } = useAuth(); // Acceso al contexto global
+export default function SignUpFormik() {
+    const { login } = useAuth(); // Hook para iniciar sesión
     const router = useRouter(); // Hook de Next.js que permite redirigir a otras páginas
     const [interests, setInterests] = useState([]); // Estado que guarda los intereses del usuario
     const [inputInterest, setInputInterest] = useState(""); // Estado que guarda el valor del input de intereses
@@ -45,10 +44,10 @@ export default function SignUpFormik() {
     };
 
     // Función que envía los datos del formulario al servidor
-    const handleSubmit = async (values, { setSubmitting,setErrors }) => {
-        try{
+    const handleSubmit = async (values, { setSubmitting, setErrors }) => {
+        try {
             const body = { ...values, interests };
-        
+
             const response = await fetch("http://localhost:3000/auth/register", {
                 method: "POST",
                 headers: {
@@ -56,12 +55,12 @@ export default function SignUpFormik() {
                 },
                 body: JSON.stringify(body),
             });
-    
+
             if (response.ok) {
                 const data = await response.json();
-    
+
                 if (data.token) {
-                    login(data.token);
+                    login(data.token); // Inicia sesión
                     router.push("/"); // Redirige al home o dashboard
                 } else {
                     setErrors({ general: "Unexpected response from the server." });
@@ -70,13 +69,12 @@ export default function SignUpFormik() {
                 const errorText = await response.text();
                 setErrors({ general: errorText || "Invalid email or password." });
             }
-        }catch (error) {
-            console.error("Login Error:", error);
+        } catch (error) {
             setErrors({ general: "An unexpected error occurred. Please try again." });
         } finally {
             setSubmitting(false);
         }
-        
+
     };
 
     return (
@@ -186,7 +184,7 @@ export default function SignUpFormik() {
                                             <p className="text-gray-700">
                                                 {interest}</p>
                                         </div>
-                                        
+
                                         <button
                                             type="button"
                                             onClick={() => handleRemoveInterest(index)} // Llama a removeInterest
@@ -205,6 +203,7 @@ export default function SignUpFormik() {
                                 <Field type="checkbox" name="allowOffers" className="ml-2" />
                             </div>
 
+                            {/* Mostrar mensaje de error si no se encuentra el comercio */}
                             {errors.general && (
                                 <div className="mb-4 text-red-700 font-bold text-center">
                                     {errors.general}
@@ -217,6 +216,8 @@ export default function SignUpFormik() {
                         </Form>
                     )}
                 </Formik>
+
+                {/* Link para redirigir al usuario a la página de login */}
                 <Link href="/auth/login">
                     <p >Do you already have an account? <span className="text-blue-500 hover:underline">Login</span></p>
                 </Link>

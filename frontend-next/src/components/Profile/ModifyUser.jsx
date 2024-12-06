@@ -1,3 +1,5 @@
+"use client"
+// Componente para modificar un usuario
 import { useUser } from "@/context/UserContext"; // Importar el contexto
 import { useState } from "react";
 import { useAuth } from "@/context/AuthContext";
@@ -5,11 +7,11 @@ import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 
 export default function ModifyUser() {
-    const { userData, updateUserData } = useUser();
+    const { userData, updateUserData } = useUser(); // Obtener los datos del usuario y la función para actualizarlos
     const [interests, setInterests] = useState(userData.interests); // Variable para guardar los intereses del usuario a modificar
     const [inputInterest, setInputInterest] = useState(""); // Variable para guardar el interés introducido
     const [successMessage, setSuccessMessage] = useState(""); // Estado para el mensaje de éxito
-    const { token } = useAuth(); 
+    const { token } = useAuth();  // Token del usuario
 
     // Validación de los campos del formulario
     const validationSchema = Yup.object({
@@ -20,8 +22,8 @@ export default function ModifyUser() {
         password: Yup.string()
             .min(8, "At least 8 characters")
             .max(16, "At most 16 characters")
-            .nullable()  // No obligatorio
-            .notRequired(),  // Se puede dejar vacío
+            .nullable()  
+            .notRequired(),  
         age: Yup.number()
             .min(1, "Age must be greater than 0"),
         city: Yup.string(),
@@ -46,41 +48,48 @@ export default function ModifyUser() {
 
     // Función para enviar los datos del formulario
     const HandleSubmit = (values, { setSubmitting, setErrors }) => {
-        const body = {
-            ...values,
-            interests
-        };
-
-        // Si la contraseña no está vacía, añadirla al cuerpo del request
-        if (values.password !== "") {
-            body.password = values.password;
-        } else {
-            delete body.password;
-        }
-        fetch(`http://localhost:3000/users/`, {
-            method: "PUT",
-            headers: {
-                Authorization: `Bearer ${token}`,
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify(body),
-        })
-            .then((response) => response.json())
-            .then((data) => {
-                setSubmitting(false);
-                if (data.message) {
-                    setSuccessMessage("User modified successfully");
-                    updateUserData({ ...userData, ...body });
-                } else {
-                    setSuccessMessage("");
-                    setErrors({ general: "Invalid values" });
-                }
+        try{
+            const body = {
+                ...values,
+                interests
+            };
+    
+            // Si la contraseña no está vacía, añadirla al cuerpo del request
+            if (values.password !== "") {
+                body.password = values.password;
+            } else {
+                delete body.password;
+            }
+            fetch(`http://localhost:3000/users/`, {
+                method: "PUT",
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(body),
             })
-            .catch(() => {
-                setSuccessMessage("");
-                setErrors({ general: "An error occurred while updating" });
-                setSubmitting(false);
-            });
+                .then((response) => response.json())
+                .then((data) => {
+                    setSubmitting(false);
+                    if (data.message) {
+                        setSuccessMessage("User modified successfully");
+                        updateUserData({ ...userData, ...body });
+                    } else {
+                        setSuccessMessage("");
+                        setErrors({ general: "Invalid values" });
+                    }
+                })
+                .catch(() => {
+                    setSuccessMessage("");
+                    setErrors({ general: "An error occurred while updating" });
+                    setSubmitting(false);
+                });
+        }catch(e){
+            setSuccessMessage("");
+            setErrors({ general: "An error occurred while updating" });
+            setSubmitting(false);
+        }
+        
     };
 
     return (
@@ -224,12 +233,14 @@ export default function ModifyUser() {
                                 />
                             </div>
 
+                            {/* Mostrar mensaje de éxito */}
                             {successMessage && (
                                 <div className="mb-4 text-green-700 font-bold text-2xl text-center">
                                     {successMessage}
                                 </div>
                             )}
 
+                            {/* Mostrar mensaje de error */}
                             {errors.general && (
                                 <div className="mb-4 text-red-700 text-2xl font-bold text-center">
                                     {errors.general}

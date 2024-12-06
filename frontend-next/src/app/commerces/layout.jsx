@@ -3,6 +3,7 @@ import { CommerceProvider } from "@/context/CommerceContext";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
+// Layout del dashboard de comercios
 export default function Layout({ children }) {
     const pathname = usePathname();
 
@@ -14,6 +15,8 @@ export default function Layout({ children }) {
                 <aside className="w-1/4 bg-gray-100 border-r border-gray-300 p-6 flex flex-col items-center">
                     <h1 className="text-3xl font-bold mb-4">Commerces</h1>
                     <div className="w-full flex flex-col gap-2">
+
+                        {/* Link para ver todos los comercios */}
                         <Link
                             href="/commerces"
                             className={`${pathname === "/commerces"
@@ -23,6 +26,8 @@ export default function Layout({ children }) {
                         >
                             See Commerces
                         </Link>
+
+                        {/* Link para crear un comercio */}
                         <Link
                             href="/commerces/create"
                             className={`${pathname === "/commerces/create"
@@ -32,6 +37,8 @@ export default function Layout({ children }) {
                         >
                             Create Commerces
                         </Link>
+
+                        {/* Link para modificar un comercio */}
                         <Link
                             href="/commerces/edit"
                             className={`${pathname === "/commerces/edit"
@@ -41,6 +48,8 @@ export default function Layout({ children }) {
                         >
                             Modify Commerces
                         </Link>
+
+                        {/* Link para eliminar un comercio */}
                         <Link
                             href="/commerces/delete"
                             className={`${pathname === "/commerces/delete"

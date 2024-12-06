@@ -1,5 +1,5 @@
 "use client";
-import Link from "next/link";
+// Componente para mostrar los detalles de un comercio y permitir el login
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import { useCommerce } from "@/context/CommerceContext";
@@ -7,8 +7,8 @@ import { useRouter } from "next/navigation";
 import { jwtDecode } from "jwt-decode";
 
 export default function CommerceDetails({ commerce }) {
-    const router = useRouter();
-    const { loginCommerce, updateCommerceData } = useCommerce();
+    const router = useRouter(); // Hook para redireccionar
+    const { loginCommerce, updateCommerceData } = useCommerce(); // Hook para el contexto de comercio
 
     // Validación con Yup
     const validationSchema = Yup.object({
@@ -24,7 +24,7 @@ export default function CommerceDetails({ commerce }) {
             if (token.cif !== commerce.cif) {
                 // Si no coincide, usamos setErrors para establecer el error
                 setErrors({ token: "El token no pertenece a este comercio" });
-                setSubmitting(false);
+                setSubmitting(false); // Establecemos que no se está enviando
                 return; // Salimos de la función sin continuar el login
             }
 
@@ -40,6 +40,8 @@ export default function CommerceDetails({ commerce }) {
 
     return (
         <div className="p-6 bg-white rounded-lg shadow-lg w-2/4 mx-auto flex flex-col py-12 px-4 mt-8">
+
+            {/* Detalles del comercio */}
             <h2 className="text-2xl font-semibold text-gray-800 mb-6">Commerce Details</h2>
             <div className="space-y-4">
                 <div className="flex items-center space-x-4">
@@ -64,6 +66,8 @@ export default function CommerceDetails({ commerce }) {
                 </div>
                 <div className="m-auto">
                     <h1 className="text-2xl font-semibold text-center">Login</h1>
+
+                    {/* Formulario de login */}
                     <Formik
                         initialValues={{ token: "" }}
                         validationSchema={validationSchema}
@@ -90,6 +94,8 @@ export default function CommerceDetails({ commerce }) {
                                         className="text-sm text-red-600 mt-1"
                                     />
                                 </div>
+
+                                {/* Mensaje de error general */}
                                 {errors.general && (
                                     <div className="mb-4 text-red-700 font-bold text-center">
                                         {errors.general}

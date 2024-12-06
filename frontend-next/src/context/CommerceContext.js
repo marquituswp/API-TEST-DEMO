@@ -5,6 +5,7 @@ import Cookies from "js-cookie";
 
 const CommerceContext = createContext();
 
+// Hook para usar el contexto de comercio
 export const useCommerce = () => {
     const context = useContext(CommerceContext);
     if (!context) {
@@ -13,17 +14,18 @@ export const useCommerce = () => {
     return context;
 };
 
+// Proveedor del contexto de comercio
 export const CommerceProvider = ({ children }) => {
-    const [commerceData, setCommerceData] = useState(null);
-    const [tokenCommerce, setTokenCommerce] = useState(null);
+    const [commerceData, setCommerceData] = useState(null); // Datos del comercio
+    const [tokenCommerce, setTokenCommerce] = useState(null); // Token del comercio
 
     // Cargar token y datos desde las cookies al montar el componente
     useEffect(() => {
         const storedTokenCommerce = Cookies.get("token_commerce");
         const storedCommerceData = Cookies.get("commerce_data");
 
-        setTokenCommerce(storedTokenCommerce || null);
-        setCommerceData(storedCommerceData ? JSON.parse(storedCommerceData) : null);
+        setTokenCommerce(storedTokenCommerce || null); // Guardar token en el estado
+        setCommerceData(storedCommerceData ? JSON.parse(storedCommerceData) : null); // Guardar datos del comercio en el estado
     }, []);
 
     // Guardar token en cookies
@@ -46,6 +48,7 @@ export const CommerceProvider = ({ children }) => {
         setCommerceData(null);
     };
 
+    // Pasar los datos del comercio, el token y las funciones de login y logout al contexto
     return (
         <CommerceContext.Provider
             value={{

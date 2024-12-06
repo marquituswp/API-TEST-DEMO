@@ -6,10 +6,10 @@ import * as Yup from "yup"; // Importamos Yup
 import { useCommerce } from "@/context/CommerceContext";
 import { jwtDecode } from "jwt-decode";
 export default function DeleteWeb() {
-    const { tokenCommerce } = useCommerce();
-    const [successMessage, setSuccessMessage] = useState("");
-    const [errorMessage, setErrorMessage] = useState("");
-    const [webDelete, setWebDelete] = useState(null)
+    const { tokenCommerce } = useCommerce(); // Token del comercio
+    const [successMessage, setSuccessMessage] = useState("");  // Mensaje de respuesta
+    const [errorMessage, setErrorMessage] = useState(""); // Mensaje de error
+    const [webDelete, setWebDelete] = useState(null) // Web a borrar
 
     // Esquema de validación
     const validationSchema = Yup.object({
@@ -18,24 +18,28 @@ export default function DeleteWeb() {
 
     // Obtener la web a borrar
     useEffect(() => {
-        if (!tokenCommerce) return;
+        if (!tokenCommerce) return; // Si no hay token, no hacemos nada
         const cif = jwtDecode(tokenCommerce).cif
-
-        fetch(`http://localhost:3000/web/`, {
-        })
-            .then(response => response.ok ? response.json() : response.text())
-            .then((data) => {
-                data.map((web) => {
-                    if (web.cifCommerce === cif) {
-                        setWebDelete(web)
-                    } else {
-                        setErrorMessage("NO_WEB")
-                    }
-                })
+        try{
+            fetch(`http://localhost:3000/web/`, {
             })
-            .catch(() => {
-                setErrorMessage("ERROR_FETCHING_DATA"); // Si hubo un error al hacer la petición
-            });
+                .then(response => response.ok ? response.json() : response.text())
+                .then((data) => {
+                    data.map((web) => {
+                        if (web.cifCommerce === cif) {
+                            setWebDelete(web) // Si la web es del comercio, la guardamos
+                        } else {
+                            setErrorMessage("NO_WEB") // Si no es del comercio, mostramos un error
+                        }
+                    })
+                })
+                .catch(() => {
+                    setErrorMessage("ERROR_FETCHING_DATA"); // Si hubo un error al hacer la petición
+                });
+        }catch{
+            setErrorMessage("ERROR_FETCHING_DATA");
+        }
+        
     }, [tokenCommerce]);
 
     // Función para enviar el formulario
@@ -50,7 +54,7 @@ export default function DeleteWeb() {
             })
                 .then((response) => response.json())
                 .then((data) => {
-                    setSuccessMessage("WEB DELETED");
+                    setSuccessMessage("WEB DELETED"); 
                 })
                 .catch(() => {
                     setSuccessMessage("");
@@ -71,6 +75,7 @@ export default function DeleteWeb() {
                 Remove Web
             </h2>
 
+            {/* Mensaje de error si no hay webs*/}
             {errorMessage && !webDelete && (
                 <div className="mb-4 text-red-700 text-2xl font-bold text-center">{errorMessage}</div>
             )}
@@ -101,20 +106,20 @@ export default function DeleteWeb() {
                             />
                         </div>
 
-                        {/* General Error Message */}
+                        {/* Mensaje de error general */}
                         {errors.general && (
                             <div className="mb-4 text-red-700 text-2xl font-bold text-center">
                                 {errors.general}
                             </div>
                         )}
 
+                        {/* Mensaje de éxito */}
                         {successMessage && (
                             <div className="mb-4 text-green-700 font-bold text-2xl text-center">
                                 {successMessage}
                             </div>
                         )}
 
-                        {/* Submit Button */}
                         <button
                             type="submit"
                             disabled={isSubmitting}

@@ -2,9 +2,9 @@
 import { useState, useEffect } from 'react';
 import "../../styles/WebDetails.css"
 import ReviewWeb from '../ReviewWeb/Review';
-export default function WebDetails({ webSent, handleWebList, islogged, urlUsed}) { // webSent es la web seleccionada, handleWebList es una función para volver a la lista de webs, islogged es un booleano que indica si el usuario está logueado
+export default function WebDetails({ webSent, handleWebList, islogged, urlUsed }) { // webSent es la web seleccionada, handleWebList es una función para volver a la lista de webs, islogged es un booleano que indica si el usuario está logueado
     const [web, setWeb] = useState(null); // Estado para guardar la web seleccionada
-    const [reviewInfo,setReviewInfo] = useState(null) // Estado para guardar la información de la review
+    const [reviewInfo, setReviewInfo] = useState(null) // Estado para guardar la información de la review
     const [review, setReview] = useState(false) // Estado para mostrar el formulario de review
 
     // Función para obtener la información de la web seleccionada
@@ -13,29 +13,29 @@ export default function WebDetails({ webSent, handleWebList, islogged, urlUsed})
         setReviewInfo(webSent)
         fetch(urlUsed)
             .then(response => response.json())
-            .then(data => setReviewInfo(data.find(listItem=>listItem._id === webSent._id)))
+            .then(data => setReviewInfo(data.find(listItem => listItem._id === webSent._id)))
             .catch(error => {
                 console.error("Error fetching data", error)
-            })        
-    }, [webSent,urlUsed,review]); // Se ejecuta cada vez que cambia la web seleccionada o el estado de review
+            })
+    }, [webSent, urlUsed, review]); // Se ejecuta cada vez que cambia la web seleccionada o el estado de review
 
     // Función para mostrar el formulario de review
     const handleReview = () => {
         setReview(!review)
-    }    
+    }
 
     // Función para mostrar las estrellas de la review
     const handlePoints = (points) => {
-        const fullStars = Math.floor(points);  
-        const hasHalfStar = points % 1 >= 0.25 && points % 1 < 0.75;  
-        const emptyStars = 5 - fullStars - (hasHalfStar ? 1 : 0); 
-        
-        
+        const fullStars = Math.floor(points);
+        const hasHalfStar = points % 1 >= 0.25 && points % 1 < 0.75;
+        const emptyStars = 5 - fullStars - (hasHalfStar ? 1 : 0);
+
+
         return (
             <span className="starRating">
-                {" ★".repeat(fullStars)}  
-                {hasHalfStar ? "☆" : ""}  
-                {" ☆".repeat(emptyStars)} 
+                {" ★".repeat(fullStars)}
+                {hasHalfStar ? "☆" : ""}
+                {" ☆".repeat(emptyStars)}
             </span>
         );
     };
@@ -71,10 +71,10 @@ export default function WebDetails({ webSent, handleWebList, islogged, urlUsed})
                         <div className="detailItem">
                             <span className="itemLabel">Texts:</span>
                             <div className="textContainer">
-                            {web.texts.map((text, index) => (
-                                <span key={index} className="itemValue">{text}</span>
-                            ))}
-                        </div>
+                                {web.texts.map((text, index) => (
+                                    <span key={index} className="itemValue">{text}</span>
+                                ))}
+                            </div>
                         </div>
                     </div>
                     <div className="detailItem">
@@ -112,9 +112,9 @@ export default function WebDetails({ webSent, handleWebList, islogged, urlUsed})
                 {/** Modal para dejar una review */}
                 {review && <div className={`modalOverlay ${review ? "active" : ""}`}>
                     <div className='reviewFormContainer'>
-                        
+
                         {/** Componente para dejar una review */}
-                        <ReviewWeb webId={web._id} reviewed={setReview}/>
+                        <ReviewWeb webId={web._id} reviewed={setReview} />
                         <p className='closeButton' onClick={handleReview}>X</p>
                     </div>
 

@@ -7,6 +7,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useUser } from "@/context/UserContext"; // Importar el hook useUser
 
+// Función para obtener los datos del usuario
 const getUserData = async (token) => {
     try {
         const { _id } = jwtDecode(token);
@@ -21,12 +22,13 @@ const getUserData = async (token) => {
     }
 };
 
+// Layout para el perfil del usuario
 export default function ProfileLayout({ children }) {
-    const { token } = useAuth();
-    const { userData, updateUserData } = useUser(); // Obtener updateUserData desde el contexto
-    const [loading, setLoading] = useState(true);
+    const { token } = useAuth(); // Obtener token desde el contexto
+    const {updateUserData } = useUser(); // Obtener updateUserData desde el contexto
+    const [loading, setLoading] = useState(true); // Estado local para el loading
     const [user, setUser] = useState(null); // Estado local para el usuario
-    const pathname = usePathname();
+    const pathname = usePathname(); // Obtener la ruta actual
 
     useEffect(() => {
         if (token) {
@@ -38,7 +40,10 @@ export default function ProfileLayout({ children }) {
         }
     }, [token, updateUserData]); // Dependencia de updateUserData
 
+    // Si está cargando, mostramos un mensaje de carga
     if (loading) return <p className="text-center text-lg">Loading Profile...</p>;
+
+    // Si no hay usuario, mostramos un mensaje de error
     if (!user) {
         return <p className="text-center text-red-500 text-lg">User not found</p>;
     }
@@ -57,6 +62,8 @@ export default function ProfileLayout({ children }) {
                 <p className="text-gray-600 mb-4">{user.email}</p>
 
                 <div className="w-full flex flex-col gap-2">
+
+                    {/* Enlaces para editar y eliminar la cuenta */}
                     <Link
                         href="/profile/options/edit"
                         className={`${pathname === "/profile/options/edit"

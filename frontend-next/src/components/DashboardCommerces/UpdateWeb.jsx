@@ -7,7 +7,7 @@ import * as Yup from "yup"; // Importamos Yup
 import { useCommerce } from "@/context/CommerceContext";
 
 export default function UpdateWeb() {
-    const { tokenCommerce } = useCommerce();
+    const { tokenCommerce } = useCommerce(); // Token del comercio
     const [successMessage, setSuccessMessage] = useState(""); // Mensaje de respuesta
     const [errorMessage, setErrorMessage] = useState(""); // Mensaje de error
     const [webUpdate, setWebUpdate] = useState(null); // Web a actualizar (para mostrar los valores actuales)
@@ -22,7 +22,7 @@ export default function UpdateWeb() {
 
     // Obtener la web a actualizar
     useEffect(() => {
-        if (!tokenCommerce) return;
+        if (!tokenCommerce) return; // Si no hay token, no hacemos nada
         const cif = jwtDecode(tokenCommerce).cif;
 
         fetch(`http://localhost:3000/web/`)
@@ -32,9 +32,9 @@ export default function UpdateWeb() {
             .then((data) => {
                 data.map((web) => {
                     if (web.cifCommerce === cif) {
-                        setWebUpdate(web);
+                        setWebUpdate(web); // Si la web es del comercio, la guardamos
                     }else{
-                        setErrorMessage("NO_WEB");
+                        setErrorMessage("NO_WEB"); // Si no es del comercio, mostramos un error
                     }
                 });
             })
@@ -45,35 +45,41 @@ export default function UpdateWeb() {
 
     // Función para enviar el formulario
     const handleSubmit = (values, { setSubmitting, setErrors }) => {
-        fetch(`http://localhost:3000/web/`, {
-            method: "PUT",
-            headers: {
-                Authorization: `Bearer ${tokenCommerce}`,
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify(values),
-        })
-            .then((response) =>
-                response.ok ? response.json() : response.text()
-            )
-            .then((data) => {
-                if (data._id) {
-                    setSuccessMessage("Web Updated");
-                } else if (data.startsWith("{")) {
-                    setSuccessMessage("");
-                    setErrors({ general: "Invalid values" });
-                } else {
-                    setSuccessMessage("");
-                    setErrors({ general: data });
-                }
+        try{
+            fetch(`http://localhost:3000/web/`, {
+                method: "PUT",
+                headers: {
+                    Authorization: `Bearer ${tokenCommerce}`,
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(values),
             })
-            .catch(() => {
-                setSuccessMessage("");
-                setErrors({ general: "Can't update" });
-            })
-            .finally(() => {
-                setSubmitting(false);
-            });
+                .then((response) =>
+                    response.ok ? response.json() : response.text()
+                )
+                .then((data) => {
+                    if (data._id) {
+                        setSuccessMessage("Web Updated");
+                    } else if (data.startsWith("{")) {
+                        setSuccessMessage("");
+                        setErrors({ general: "Invalid values" });
+                    } else {
+                        setSuccessMessage("");
+                        setErrors({ general: data });
+                    }
+                })
+                .catch(() => {
+                    setSuccessMessage("");
+                    setErrors({ general: "Can't update" });
+                })
+                .finally(() => {
+                    setSubmitting(false);
+                });
+        }catch{
+            setSuccessMessage("");
+            setErrors({ general: "Can't update" });
+        }
+        
     };
 
     return (
@@ -82,11 +88,10 @@ export default function UpdateWeb() {
                 Update Web
             </h2>
 
+            {/* Mensaje de error si no hay webs*/}
             {errorMessage && !webUpdate && (
                 <div className="mb-4 text-red-700 text-2xl font-bold text-center">{errorMessage}</div>
             )}
-
-            {/* Formulario para actualizar la web */}
             {webUpdate && (
                 <Formik
                     initialValues={{
@@ -100,7 +105,6 @@ export default function UpdateWeb() {
                 >
                     {({ isSubmitting, errors }) => (
                         <Form className="space-y-6">
-                            {/* Campos del formulario */}
                             <div>
                                 <label
                                     htmlFor="city"
@@ -181,12 +185,14 @@ export default function UpdateWeb() {
                                 />
                             </div>
 
+                            {/* Mensaje de error general */}
                             {errors.general && (
                                 <div className="mb-4 text-red-700 text-2xl font-bold text-center">
                                     {errors.general}
                                 </div>
                             )}
 
+                            {/* Mensaje de éxito */}
                             {successMessage && (
                                 <div className="mb-4 text-green-700 font-bold text-2xl text-center">
                                     {successMessage}

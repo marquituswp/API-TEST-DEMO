@@ -1,11 +1,12 @@
 "use client";
+// Componente para crear una web
 import { useState } from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup"; // Importamos Yup
 import { useCommerce } from "@/context/CommerceContext";
 
 export default function CreateWeb() {
-    const { tokenCommerce } = useCommerce();
+    const { tokenCommerce } = useCommerce(); // Token del comercio
     const [texts, setTexts] = useState([]); // Lista de textos a añadir
     const [inputText, setInputText] = useState("");  // Texto a añadir
     const [successMessage, setSuccessMessage] = useState(""); // Mensaje de respuesta
@@ -34,34 +35,40 @@ export default function CreateWeb() {
 
     // Función para enviar el formulario
     const handleSubmit = (values, { setSubmitting,setErrors }) => {
-        const body = { ...values, texts: texts };
-        fetch(`http://localhost:3000/web/`, {
-            method: "POST",
-            headers: {
-                'Authorization': `Bearer ${tokenCommerce}`,
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify(body),
-        })
-            .then((response) => response.ok ? response.json() : response.text())
-            .then((data) => {
-                if (data.city) {
-                    setSuccessMessage("Web Created");
-                } else if (data.startsWith("{")) {
-                    setSuccessMessage("");
-                    setErrors({ general: "Invalid values" });
-                } else {
-                    setSuccessMessage("");
-                    setErrors({general: data});
-                }
+        try{
+            const body = { ...values, texts: texts };
+            fetch(`http://localhost:3000/web/`, {
+                method: "POST",
+                headers: {
+                    'Authorization': `Bearer ${tokenCommerce}`,
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(body),
             })
-            .catch(() => {
-                setSuccessMessage("");
-                setErrors({ general: "Can't create web" });
-            })
-            .finally(() => {
-                setSubmitting(false);
-            });
+                .then((response) => response.ok ? response.json() : response.text())
+                .then((data) => {
+                    if (data.city) {
+                        setSuccessMessage("Web Created");
+                    } else if (data.startsWith("{")) {
+                        setSuccessMessage("");
+                        setErrors({ general: "Invalid values" });
+                    } else {
+                        setSuccessMessage("");
+                        setErrors({general: data});
+                    }
+                })
+                .catch(() => {
+                    setSuccessMessage("");
+                    setErrors({ general: "Can't create web" });
+                })
+                .finally(() => {
+                    setSubmitting(false);
+                });
+        }catch{
+            setSuccessMessage("");
+            setErrors({ general: "An unexpected error occurred. Please try again." });
+        }
+        
     };
 
     return (
@@ -81,7 +88,6 @@ export default function CreateWeb() {
             >
                 {({ isSubmitting,errors }) => (
                     <Form className="space-y-6">
-                        {/* City Field */}
                         <div className="relative">
                             <Field
                                 type="text"
@@ -92,7 +98,6 @@ export default function CreateWeb() {
                             <ErrorMessage name="city" component="div" className="text-red-500 text-sm mt-1" />
                         </div>
 
-                        {/* Activity Field */}
                         <div className="relative">
                             <Field
                                 type="text"
@@ -103,7 +108,6 @@ export default function CreateWeb() {
                             <ErrorMessage name="activity" component="div" className="text-red-500 text-sm mt-1" />
                         </div>
 
-                        {/* Title Field */}
                         <div className="relative">
                             <Field
                                 type="text"
@@ -114,7 +118,6 @@ export default function CreateWeb() {
                             <ErrorMessage name="title" component="div" className="text-red-500 text-sm mt-1" />
                         </div>
 
-                        {/* Summary Field */}
                         <div className="relative">
                             <Field
                                 type="text"
@@ -125,7 +128,6 @@ export default function CreateWeb() {
                             <ErrorMessage name="summary" component="div" className="text-red-500 text-sm mt-1" />
                         </div>
 
-                        {/* Add Text Section */}
                         <div className="flex space-x-4 items-center">
                             <input
                                 type="text"
@@ -143,7 +145,6 @@ export default function CreateWeb() {
                             </button>
                         </div>
 
-                        {/* Text List */}
                         <ul className="space-y-2 mt-4">
                             {texts.map((text, index) => (
                                 <li key={index} className="flex justify-between items-center bg-gray-100 p-2 rounded-md">
@@ -159,19 +160,18 @@ export default function CreateWeb() {
                             ))}
                         </ul>
 
-                        {/* General Error Message */}
+                        {/* Mensaje de error general */}
                         {errors.general && (
                             <div className="mb-4 text-red-700 text-2xl font-bold text-center">{errors.general}</div>
                         )}
 
-                        {/* Response Message */}
+                        {/* Mensaje de éxito */}
                         {successMessage && (
                             <div className="mb-4 text-green-700 font-bold text-2xl text-center">
                                 {successMessage}
                             </div>
                         )}
 
-                        {/* Submit Button */}
                         <button
                             type="submit"
                             disabled={isSubmitting}

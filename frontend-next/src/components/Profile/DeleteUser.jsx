@@ -1,10 +1,12 @@
+"use client"
+// Componente para eliminar un usuario
 import { useState } from "react";
 import { useAuth } from "@/context/AuthContext";
 
 export default function DeleteUser() {
     const [errorMessage, setErroreMessage] = useState(null); // Mensaje de error
     const [successMessage, setSuccessMessage] = useState(null); // Mensaje de éxito
-    const { logout, token } = useAuth();
+    const { logout, token } = useAuth(); // Token del usuario y función para hacer logout
 
     // Petición DELETE a la API para eliminar un usuario
     const handleClick = (event) => {
@@ -20,13 +22,13 @@ export default function DeleteUser() {
                 .then((response) => response.json())
                 .then((data) => {
                     if (data.message) {
-                        setSuccessMessage(data.message);
+                        setSuccessMessage(data.message); // Si se ha eliminado el usuario, mostramos un mensaje de éxito
                         setErroreMessage(null);
 
-                        // Esperamos 2 segundos antes de hacer el logout
+                        // Esperamos 1 segundo antes de hacer el logout
                         setTimeout(() => {
                             logout();
-                        }, 1000); // 2000 ms = 2 segundos
+                        }, 1000); 
                     } else {
                         setErroreMessage(data.error);
                         setSuccessMessage(null);
@@ -64,12 +66,14 @@ export default function DeleteUser() {
                     </div>
                 </form>
 
+                {/* Mostrar mensaje de éxito*/}
                 {successMessage && (
                     <div className="mb-4 mt-6 text-red-700 text-2xl font-bold text-center">
                         {successMessage}
                     </div>
                 )}
 
+                {/* Mostrar mensaje de error */}
                 {errorMessage && (
                     <div className="mb-4 mt-6 text-green-700 font-bold text-2xl text-center">
                         {errorMessage}

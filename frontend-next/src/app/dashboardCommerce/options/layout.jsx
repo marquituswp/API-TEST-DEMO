@@ -3,15 +3,18 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useRouter } from "next/navigation";
 import { useCommerce } from "@/context/CommerceContext";
-export default function Layout({ children }) {
-    const {logoutCommerce} = useCommerce();
-    const router = useRouter();
-    const pathname = usePathname();
 
+// Componente para el layout de las opciones del comercio
+export default function Layout({ children }) {
+    const {logoutCommerce} = useCommerce(); // Obtener la función de logout commerce
+    const router = useRouter(); // Hook para redirigir a otras rutas
+    const pathname = usePathname(); // Hook para obtener la ruta actual
+
+    // Función para hacer logout
     const handleLogout = async () => {
         try {
-            await logoutCommerce(); // Asegúrate de esperar si logoutCommerce es asincrónico
-            router.push("/commerces"); // Redirige a la ruta deseada
+            await logoutCommerce(); // Hace logout
+            router.push("/commerces"); // Redirige a la ruta de ver todos los comercios
         } catch (error) {
             console.error("Error during logout:", error);
         }
@@ -24,6 +27,8 @@ export default function Layout({ children }) {
                 <aside className="w-1/4 bg-gray-100 border-r border-gray-300 p-6 flex flex-col items-center">
                     <h1 className="text-3xl font-bold mb-4">Commerces</h1>
                     <div className="w-full flex flex-col gap-2">
+
+                        {/* Opciones de crear Web */}
                         <Link
                             href="/dashboardCommerce/options"
                             className={`${pathname === "/dashboardCommerce/options"
@@ -33,6 +38,8 @@ export default function Layout({ children }) {
                         >
                             Create Web
                         </Link>
+
+                        {/* Opcion de eliminar Web */}
                         <Link
                             href="/dashboardCommerce/options/deleteWeb"
                             className={`${pathname === "/dashboardCommerce/options/deleteWeb"
@@ -42,6 +49,8 @@ export default function Layout({ children }) {
                         >
                             Delete Web
                         </Link>
+
+                        {/* Opcion de actualizar Web */}
                         <Link
                             href="/dashboardCommerce/options/updateWeb"
                             className={`${pathname === "/dashboardCommerce/options/updateWeb"
@@ -51,6 +60,8 @@ export default function Layout({ children }) {
                         >
                             Update Web
                         </Link>
+
+                        {/* Opcion de ver usuarios interesados */}
                         <Link
                             href="/dashboardCommerce/options/seeUsers"
                             className={`${pathname === "/dashboardCommerce/options/seeUsers"
@@ -60,6 +71,8 @@ export default function Layout({ children }) {
                         >
                             See Users Interested in your City
                         </Link>
+
+                        {/* Opcion de subir imagen o texto */}
                         <Link
                             href="/dashboardCommerce/options/uploadImage"
                             className={`${pathname === "/dashboardCommerce/options/uploadImage"
@@ -69,6 +82,8 @@ export default function Layout({ children }) {
                         >
                             Upload Image or Texts
                         </Link>
+
+                        {/* Botón de logout Commerce */}
                         <button
                             className={"btn bg-red-500 hover:bg-red-600"}
                             onClick={handleLogout}

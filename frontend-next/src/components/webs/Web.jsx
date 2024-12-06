@@ -4,11 +4,12 @@ import { useEffect, useState, useCallback } from "react";
 import { useFilters } from "@/hook/useFilters";
 import HandlePoints from "./Rating";
 import Link from "next/link";
-export default function WebPages() { // islogged es un booleano que indica si el usuario está logueado
-    const [webs, setWebs] = useState([])
+export default function WebPages() {
+    const [webs, setWebs] = useState([]) // Estado para guardar la lista de webs
     const [city, setCity] = useState("") // Estado para guardar la ciudad seleccionada
     const [activity, setActivity] = useState("") // Estado para guardar la actividad seleccionada
     const [order, setOrder] = useState(false) // Estado para guardar el orden seleccionado
+    const [error, setError] = useState(false) // Estado para guardar si hubo un error al obtener los datos
     const { filterByCity, filterByActivity } = useFilters({ webs }) // Filtros para la búsqueda
     // Función para obtener la URL de la API según los filtros y el orden seleccionados
     const getUrl = useCallback(() => {
@@ -32,19 +33,36 @@ export default function WebPages() { // islogged es un booleano que indica si el
 
     // Función para obtener la lista de webs
     useEffect(() => {
-        const url = getUrl();
-        fetch(url)
-            .then(response => response.json())
-            .then(data => setWebs(data))
-            .catch(error => {
-                console.error("Error fetching data", error);
-                setError(true);
-            });
+        try{
+            const url = getUrl();
+            fetch(url)
+                .then(response => response.json())
+                .then((data) =>{
+                    setWebs(data);
+                    setError(false);
+                })
+                .catch(error => {
+                    console.error("Error fetching data", error);
+                    setError(true);
+                });
+        }catch{
+            setError(true);
+        }
+        
     }, [getUrl]);
 
 
+    // Si hay un error al obtener los datos, se muestra un mensaje de error
+    if (error) {
+        return <div className="text-center">Error fetching data</div>
+    }
 
+    // Si no hay webs, se muestra un mensaje de que no hay webs
+    if (webs.length === 0) {
+        return <div className="text-center">No webs available</div>
+    }
 
+    // Si hay webs, se muestra la lista de webs
     return (
         <>
             <div className="w-full h-screen">
@@ -84,7 +102,10 @@ export default function WebPages() { // islogged es un booleano que indica si el
                 <h2 className="text-3xl font-bold">Web pages</h2>
                 <ul className="mt-5">
 
+                    {/* Mapeo de la lista de webs */}
                     {webs.map((web, index) => (
+
+                        // Enlace a la página de detalles de la web
                         <Link key={index} href={`/web/${web._id}`}>
                             <li className="cursor-pointer flex items-center px-4 py-8 border-b border-gray-200 hover:bg-gray-200 transition duration-300 fade-in hover:shadow-inner rounded-lg">
                                 <div className="flex items-center justify-center w-32 h-20 overflow-hidden">

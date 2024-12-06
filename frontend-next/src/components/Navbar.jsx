@@ -3,15 +3,18 @@ import { usePathname } from "next/navigation";
 import Link from "next/link";
 import Logo from "@/components/Logo";
 import { jwtDecode } from "jwt-decode";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useAuth } from "@/context/AuthContext";
-export default function Navbar() {
-    const pathname = usePathname();
-    const {token,logout} = useAuth();
-    const tokenUser = token? jwtDecode(token) : null;
-    const [menuOpen, setMenuOpen] = useState(false);
-    const excludePaths = ["/auth/login", "/auth/register"];
 
+// Componente Navbar
+export default function Navbar() {
+    const pathname = usePathname(); // Obtener la ruta actual
+    const {token,logout} = useAuth(); // Obtener el token y la función de logout del contexto
+    const tokenUser = token? jwtDecode(token) : null; // Decodificar el token
+    const [menuOpen, setMenuOpen] = useState(false); // Estado para saber si el menú está abierto
+    const excludePaths = ["/auth/login", "/auth/register"]; // Rutas en las que no se muestra el Navbar
+
+    // Si la ruta actual está en excludePaths, no renderizar el Navbar
     if (excludePaths.includes(pathname)) {
         return null; // No renderizar Navbar en rutas excluidas
     }

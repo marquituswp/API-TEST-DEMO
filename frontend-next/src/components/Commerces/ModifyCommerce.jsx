@@ -6,11 +6,11 @@ import * as Yup from "yup";
 import { useAuth } from "@/context/AuthContext";
 
 export default function ModifyCommerce() {
-    const { token } = useAuth();
-    const [successMessage, setSuccessMessage] = useState("");
-    const [errorMessage, setErrorMessage] = useState("");
-    const [cif, setCif] = useState("");
-    const [commerceSelected, setCommerceSelected] = useState(null);
+    const { token } = useAuth(); // Obtenemos el token de autenticación
+    const [successMessage, setSuccessMessage] = useState(""); // Mensaje de éxito
+    const [errorMessage, setErrorMessage] = useState(""); // Mensaje de error
+    const [cif, setCif] = useState(""); // CIF del comercio
+    const [commerceSelected, setCommerceSelected] = useState(null); // Comercio seleccionado
 
     useEffect(() => {
         if (cif) {
@@ -24,26 +24,28 @@ export default function ModifyCommerce() {
                 .then((response) => (response.ok ? response.json() : response.text()))
                 .then((data) => {
                     if (data._id) {
-                        setCommerceSelected(data);
-                        setErrorMessage("");
+                        setCommerceSelected(data); // Guardamos el comercio seleccionado
+                        setErrorMessage(""); // Limpiamos el mensaje de error
                     } else if (data.startsWith("{")) {
-                        setCommerceSelected(null);
-                        setErrorMessage("CIF_INVALID");
+                        setCommerceSelected(null); // Limpiamos el comercio seleccionado
+                        setErrorMessage("CIF_INVALID"); // Mostramos mensaje de error
                     } else {
-                        setCommerceSelected(null);
-                        setErrorMessage(data);
+                        setCommerceSelected(null); // Limpiamos el comercio seleccionado
+                        setErrorMessage(data); // Mostramos mensaje de error
                     }
                 })
                 .catch(() => {
-                    setErrorMessage("ERROR_FETCHING_DATA");
+                    setErrorMessage("ERROR_FETCHING_DATA"); // Mostramos mensaje de error
                 });
         }
     }, [cif, token]);
 
+    // Función para manejar el cambio en el campo CIF
     const handleChange = (event) => {
         setCif(event.target.value);
     };
 
+    // Validación con Yup
     const validationSchema = Yup.object({
         name: Yup.string().required("Name is required"),
         cif: Yup.string()
@@ -59,31 +61,36 @@ export default function ModifyCommerce() {
     });
 
     const handleSubmit = (values, { setSubmitting, setErrors }) => {
-        fetch(`http://localhost:3000/comercio/${values.cif}`, {
-            method: "PUT",
-            headers: {
-                Authorization: `Bearer ${token}`,
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify(values),
-        })
-            .then((response) => response.json())
-            .then((data) => {
-                if (data.errors) {
-                    setSuccessMessage("");
-                    setErrors({ general: "Invalid values" });
-                }
-                if (data._id) {
-                    setSuccessMessage("Commerce Updated");
-                }
+        try{
+            fetch(`http://localhost:3000/comercio/${values.cif}`, {
+                method: "PUT",
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(values),
             })
-            .catch(() => {
-                setSuccessMessage("");
-                setErrors({ general: "Error updating commerce" });
-            })
-            .finally(() => {
-                setSubmitting(false);
-            });
+                .then((response) => response.json())
+                .then((data) => {
+                    if (data.errors) {
+                        setSuccessMessage(""); // Limpiamos el mensaje de éxito
+                        setErrors({ general: "Invalid values" }); // Mostramos un error general
+                    }
+                    if (data._id) {
+                        setSuccessMessage("Commerce Updated"); // Mostramos mensaje de éxito
+                    }
+                })
+                .catch(() => {
+                    setSuccessMessage(""); // Limpiamos el mensaje de éxito
+                    setErrors({ general: "Error updating commerce" }); // Mostramos un error general
+                })
+                .finally(() => {
+                    setSubmitting(false); // Cambiamos el estado de enviando a falso
+                });
+        }catch(error){
+            setErrors({ general: "Invalid values" }); // Mostramos un error general
+        }
+        
     };
 
     return (
@@ -107,6 +114,7 @@ export default function ModifyCommerce() {
                 <div className="mb-4 text-red-700 text-2xl font-bold text-center">{errorMessage}</div>
             )}
 
+            {/* Formulario para modificar el comercio */}
             {commerceSelected && (
                 <Formik
                     initialValues={{
@@ -177,12 +185,14 @@ export default function ModifyCommerce() {
                                 />
                             </div>
 
+                            {/* Mensaje de error general */}
                             {errors.general && (
                                 <div className="mb-4 text-red-700 text-2xl font-bold text-center">
                                     {errors.general}
                                 </div>
                             )}
 
+                            {/* Mensaje de éxito */}
                             {successMessage && (
                                 <div className="mb-4 text-green-700 font-bold text-2xl text-center">
                                     {successMessage}

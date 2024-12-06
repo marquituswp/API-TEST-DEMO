@@ -1,8 +1,7 @@
-"use client"
-import { useCommerce } from "@/context/CommerceContext";
 import CreateWeb from "@/components/DashboardCommerces/CreateWeb";
+
+// Página para la opcion inicial del dashboard del comercio (crear web)
 export default function DashboardCommerce() {
-    const  {tokenCommerce}  = useCommerce();
     return (
         <div>
             <CreateWeb />

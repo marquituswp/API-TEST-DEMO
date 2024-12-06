@@ -1,11 +1,11 @@
-import Link from "next/link";
+// Layout para páginas de autenticación
 import Image from "next/image";
 import Logo from "@/components/Logo";
 export default function LayoutAuth({ children }) {
   return (
     <>
       <nav className="bg-transparent mb-4 flex z-10 justify-start items-center px-20 p-3 font-bold text-black w-full min-h-20 border-b-2 absolute top-0 h-2 border-none">
-        <Logo type="auth" />
+        <Logo type="auth" /> 
       </nav>
       <div className="grid grid-cols-2 h-screen relative">
 

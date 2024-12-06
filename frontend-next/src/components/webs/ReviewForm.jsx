@@ -1,4 +1,5 @@
 "use client";
+// Componente para el formulario de reseña de una web
 import React, { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -7,15 +8,17 @@ import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 
 export default function ReviewWeb({ webId }) {
-    const router = useRouter();
-    const { token } = useAuth();
+    const router = useRouter(); // Hook para manejar la navegación
+    const { token } = useAuth(); // Hook para obtener el token de autenticación
     const [successMessage, setSuccessMessage] = useState(""); // Estado para el mensaje de éxito
 
+    // Valores iniciales
     const initialValues = {
         review: "",
         scoring: "",
     };
 
+    // Esquema de validación del formulario
     const validationSchema = Yup.object({
         review: Yup.string()
             .required("Comment is required")
@@ -41,7 +44,9 @@ export default function ReviewWeb({ webId }) {
                 const data = await response.json();
 
                 if (data.message) {
-                    setSuccessMessage(data.message);
+                    setSuccessMessage(data.message); // Muestra mensaje de éxito
+
+                    // Redirige a la página de la web después de 1 segundo
                     setTimeout(() => {
                         router.push(`/web/${webId}`);
                     }, 1000);
@@ -122,11 +127,15 @@ export default function ReviewWeb({ webId }) {
                                     className="text-red-500 text-sm"
                                 />
                             </div>
+
+                            {/* Muestra un mensaje de éxito */}
                             {successMessage && (
                                 <div className="mb-4 text-green-700 font-bold text-2xl text-center">
                                     {successMessage}
                                 </div>
                             )}
+
+                            {/* Muestra un mensaje de error general */}
                             {errors.general && (
                                 <div className="mb-4 text-red-700 font-bold text-center">
                                     {errors.general}

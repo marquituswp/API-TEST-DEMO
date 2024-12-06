@@ -16,17 +16,20 @@ export const AuthProvider = ({ children }) => {
         setToken(storedToken || null);
     }, []);
 
+    // Función para hacer login
     const login = (newToken) => {
         Cookies.set("token", newToken);
         setToken(newToken);
     };
 
+    // Función para hacer logout
     const logout = () => {
         Cookies.remove("token");
         setToken(null);
-        router.push("/");
+        router.push("/"); // Redirigir a la página principal
     };
 
+    // Pasar el token y las funciones de login y logout al contexto
     return (
         <AuthContext.Provider value={{ token, login, logout }}>
             {children}

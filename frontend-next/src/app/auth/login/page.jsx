@@ -6,8 +6,9 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/context/AuthContext";
 export default function Login() {
-    const router = useRouter();
-    const { login } = useAuth();
+    const router = useRouter(); // Hook para redirigir a otras páginas
+    const { login } = useAuth(); // Hook para iniciar sesión
+
     // Esquema de validación de los campos del formulario
     const validationSchema = Yup.object({
         email: Yup.string().email("Invalid email").required("Email is required"),
@@ -33,14 +34,13 @@ export default function Login() {
                 const data = await response.json();
 
                 if (data.token) {
-                    login(data.token);
+                    login(data.token); // Inicia sesión
                     router.push("/"); // Redirige al home o dashboard
                 } else {
                     setErrors({ general: "Unexpected response from the server." });
                 }
             } else {
-                const errorText = await response.text();
-                setErrors({ general: errorText || "Invalid email or password." });
+                setErrors({ general: "Invalid email or password." });
             }
         } catch (error) {
             console.error("Login Error:", error);
@@ -79,7 +79,6 @@ export default function Login() {
                                 />
                             </div>
 
-                            {/* Campo de Contraseña */}
                             <div className="mb-6 relative">
                                 <Field
                                     type="password"
@@ -94,6 +93,7 @@ export default function Login() {
                                 />
                             </div>
 
+                            {/* Mostrar mensaje de error si no se encuentra el comercio */}
                             {errors.general && (
                                 <div className="mb-4 text-red-700 font-bold text-center">
                                     {errors.general}
@@ -111,6 +111,7 @@ export default function Login() {
                     )}
                 </Formik>
 
+                {/* Enlace para crear una cuenta */}
                 <Link href="/auth/register">
                     <p className="mt-4">
                         You don't have an account?{" "}

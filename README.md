@@ -39,21 +39,21 @@ Usar el comando `pnpm run dev` para iniciar el servidor
 
 Un usuario no registrado podra visualizar las webs, pudiendo filtrarlas por ciudad o intereses. Y ordenarlas por scoring o fecha de creación.
 
-![alt text](image.png)
+![alt text](/imagesDocs/image.png)
 
-![alt text](image-1.png)
+![alt text](/imagesDocs/image-1.png)
 
 **Detalles de una web**
 
-![alt text](image-4.png)
+![alt text](/imagesDocs/image-4.png)
 
 Además, podrá registrarse en la aplicación e iniciar sesión.
 
-![alt text](image-2.png)
+![alt text](/imagesDocs/image-2.png)
 
 **El logo IMMUNEAPI te manda a la página principal**
 
-![alt text](image-3.png)
+![alt text](/imagesDocs/image-3.png)
 
 ## Usuario registrado no administrador
 **Ejemplo de usuario no administrador:**
@@ -67,18 +67,18 @@ Además, podrá registrarse en la aplicación e iniciar sesión.
 
 Un usuario registrado podrá hacer todo lo anterior, además de poder dejar una review en la Web que desee.
 
-![alt text](image-5.png)
+![alt text](/imagesDocs/image-5.png)
 
-![alt text](image-6.png)
+![alt text](/imagesDocs/image-6.png)
 
 **El usuario podrá editar su perfil** 
 - En el menú desplegable de la derecha, pulsar Profile
 
-![alt text](image-7.png)
+![alt text](/imagesDocs/image-7.png)
 
 **Y borrar su cuenta**
 
-![alt text](image-8.png)
+![alt text](/imagesDocs/image-8.png)
 
 ## Usuario registrado administrador
 
@@ -88,15 +88,15 @@ Un usuario registrado podrá hacer todo lo anterior, además de poder dejar una 
 
 Un admin puede hacer todo lo anterior, además de poder manejar los comercios
 
-![alt text](image-9.png)
+![alt text](/imagesDocs/image-9.png)
 
 **Podrá ver todos los comercios existentes**
 
-![alt text](image-10.png)
+![alt text](/imagesDocs/image-10.png)
 
 **Y con más detalle:**
 
-![alt text](image-15.png)
+![alt text](/imagesDocs/image-15.png)
 
 **Podrá añadir un comercio**
 - **Ejemplo de un comercio:**
@@ -106,25 +106,25 @@ Un admin puede hacer todo lo anterior, además de poder manejar los comercios
   - Phone: 123456789
   - PageId: 1234
 
-![alt text](image-11.png)
+![alt text](/imagesDocs/image-11.png)
 
 **Cuando se crea un comercio exitosamente, saldrá un botón para copiar el token del comercio**
 
-![alt text](image-14.png)
+![alt text](/imagesDocs/image-14.png)
 
 **Podrá editar un comercio**
 - Para ello, se debe ingresar el CIF del comercio a editar
 
-![alt text](image-12.png)
+![alt text](/imagesDocs/image-12.png)
 
 **Si ingresas un CIF correcto:**
 
-![alt text](image-25.png)
+![alt text](/imagesDocs/image-25.png)
 
 **Podrá borrar un comercio de forma física o lógica**
 - Para ello, se debe ingresar el CIF del comercio a borrar
 
-![alt text](image-13.png)
+![alt text](/imagesDocs/image-13.png)
 
 # Comercio registrado
 
@@ -135,11 +135,11 @@ Un admin puede hacer todo lo anterior, además de poder manejar los comercios
 - Pulsar en uno de los comercios existentes con el cual se quiera loggear
 - Añadir el token del comercio en el campo de texto y pulsar en Loggear
 
-![alt text](image-16.png)
+![alt text](/imagesDocs/image-16.png)
 
 **Una vez loggeado, el comercio podrá crear una Web, editarla, borrarla, ver los usuarios interesados en ella y subir imágenes o textos**
 
-![alt text](image-17.png)
+![alt text](/imagesDocs/image-17.png)
 
 **Ejemplo de una Web:**
 - City: Mallorca
@@ -148,27 +148,27 @@ Un admin puede hacer todo lo anterior, además de poder manejar los comercios
 - Summary: Surf en Mallorca
 - Add Text: (Puedes añadir los textos que quieras, pulsando add text despues de escribir)
 
-![alt text](image-19.png)
+![alt text](/imagesDocs/image-19.png)
 
 **Cuando ya hay una Web creada, se puede modificar la misma**
 
-![alt text](image-20.png)
+![alt text](/imagesDocs/image-20.png)
 
 **Ver los usuarios interesados en la misma**
 
-![alt text](image-21.png)
+![alt text](/imagesDocs/image-21.png)
 
 **Subir imágenes o textos**
 
-![alt text](image-22.png)
+![alt text](/imagesDocs/image-22.png)
 
 **Borrar la Web física o lógicamente**
 
-![alt text](image-23.png)
+![alt text](/imagesDocs/image-23.png)
 
 **Si no hay una Web creada, las demás opciones indicarán un mensaje de error de NO_WEB**
 
-![alt text](image-24.png)
+![alt text](/imagesDocs/image-24.png)
 
 ## Resumen de la aplicación
 

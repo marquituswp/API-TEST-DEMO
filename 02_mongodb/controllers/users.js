@@ -19,6 +19,7 @@ const getUsers = async (req,res)=>{
 const modifyUsers = async (req,res) =>{
     try{
         const {...body} = matchedData(req)
+        console.log(body)   
         // Obtengo el id del usuario logueado desde el token
         const id = req.user._id
         // Compruebo que el usuario exista

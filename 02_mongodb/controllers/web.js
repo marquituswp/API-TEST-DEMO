@@ -54,7 +54,9 @@ const createWeb = async (req, res) => {
     try {
         const web = matchedData(req)
         //Añadimos el cif del comercio a la web (para saber a qué comercio pertenece)
+        console.log(req.commerce)
         web["cifCommerce"] = req.commerce.cif
+        console.log(web)
         const data = await webModel.create(web)
         res.status(200).json(data)
     } catch (error) {

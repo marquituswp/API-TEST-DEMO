@@ -60,8 +60,8 @@ DELETE http://localhost:3000/web/671bcfd3857881e71bd1e30b?hard=true
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjaWYiOiIxMjM0NTY4NEEiLCJpYXQiOjE3Mjk4NzIwNDksImV4cCI6MTcyOTk1ODQ0OX0.RR39qdTyJu5bYxh4y0i_GTUuD20Lw1gg-fp7QIiJ1SE
 
 ### Subir imagen a array de imagenes de la web
-PATCH http://localhost:3000/web/671bcfd3857881e71bd1e30b HTTP/1.1
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjaWYiOiIxMjM0NTY4NUEiLCJpYXQiOjE3Mjk4NzUzODEsImV4cCI6MTcyOTk2MTc4MX0.4CVuiQmiKjXLvRlsHnOKuT37hzTNi-rhBh3MOZNW4eU
+PATCH http://localhost:3000/web/ HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjaWYiOiIxMTExMTExMTEiLCJpYXQiOjE3MzMzMzE2ODEsImV4cCI6MTc2NDg4OTI4MX0.vMg_F-wiW26Gtga5xhoA_5bU4ydIkRFaK271xJMQ0lk
 Content-Type: multipart/form-data; boundary=Boundry
 
 --Boundry

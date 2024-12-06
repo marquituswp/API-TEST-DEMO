@@ -23,7 +23,7 @@ const registerUser = async (req,res)=>{
 
         res.status(200).send(data)
     }catch(error){
-        handleHttpError(res,"ERROR_REGISTER_USER",403)
+        handleHttpError(res,"USER_ALREADY_EXISTS",403)
     }
 }
 

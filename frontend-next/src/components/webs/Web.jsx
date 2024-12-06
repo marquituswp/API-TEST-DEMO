@@ -42,7 +42,7 @@ export default function WebPages() { // islogged es un booleano que indica si el
             });
     }, [getUrl]);
 
-    
+
 
 
     return (
@@ -86,9 +86,13 @@ export default function WebPages() { // islogged es un booleano que indica si el
 
                     {webs.map((web, index) => (
                         <Link key={index} href={`/web/${web._id}`}>
-                            <li  className="cursor-pointer flex items-center px-4 py-8 border-b border-gray-200 hover:bg-gray-200 transition duration-300 fade-in hover:shadow-inner rounded-lg">
-                                <div className="items-center justify-center w-32 h-20 max-w-32">
-                                    <img src={`http://localhost:3000${web.images[0]}`} alt={web.title} />
+                            <li className="cursor-pointer flex items-center px-4 py-8 border-b border-gray-200 hover:bg-gray-200 transition duration-300 fade-in hover:shadow-inner rounded-lg">
+                                <div className="flex items-center justify-center w-32 h-20 overflow-hidden">
+                                    <img
+                                        src={`http://localhost:3000${web.images[0]}`}
+                                        alt={web.title}
+                                        className="w-full h-full object-contain"
+                                    />
                                 </div>
                                 <div className="flex flex-col flex-grow ml-4">
 

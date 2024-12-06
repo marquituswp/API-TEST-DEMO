@@ -1,12 +1,15 @@
 "use client"
 // Componente SignUp
 import { useState } from "react";
+import React from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
-import Message from "@/components/Message";
 import Link from "next/link";
-export default function SignUpFormik({ setLoggedSignUp, setNameSignUp }) { // setLoggedSignUp es una función que se ejecuta cuando se registra un usuario
-    const [data, setData] = useState(""); // Estado que guarda el mensaje de error o éxito
+import { useRouter } from "next/navigation";
+import { useAuth } from "@/context/AuthContext";
+export default function SignUpFormik() { 
+    const { login } = useAuth(); // Acceso al contexto global
+    const router = useRouter(); // Hook de Next.js que permite redirigir a otras páginas
     const [interests, setInterests] = useState([]); // Estado que guarda los intereses del usuario
     const [inputInterest, setInputInterest] = useState(""); // Estado que guarda el valor del input de intereses
 
@@ -42,31 +45,38 @@ export default function SignUpFormik({ setLoggedSignUp, setNameSignUp }) { // se
     };
 
     // Función que envía los datos del formulario al servidor
-    const handleSubmit = (values, { setSubmitting }) => {
-        const body = { ...values, interests };
-        fetch("http://localhost:3000/auth/register", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify(body),
-        })
-            .then((response) => response.ok ? response.json() : response.text())
-            .then((data) => {
-                setSubmitting(false);
-                if (data.token) {
-                    setLoggedSignUp(true); // Ejecuta la función setLoggedSignUp
-                    const token = data.token;
-                    localStorage.setItem("token", token); // Guarda el token en el localStorage
-                    setNameSignUp(data.user.name); // Asigna el nombre del usuario al estado
-                } else {
-                    setData(data);
-                }
-            })
-            .catch(() => {
-                setData("Invalid Values");
-                setSubmitting(false);
+    const handleSubmit = async (values, { setSubmitting,setErrors }) => {
+        try{
+            const body = { ...values, interests };
+        
+            const response = await fetch("http://localhost:3000/auth/register", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(body),
             });
+    
+            if (response.ok) {
+                const data = await response.json();
+    
+                if (data.token) {
+                    login(data.token);
+                    router.push("/"); // Redirige al home o dashboard
+                } else {
+                    setErrors({ general: "Unexpected response from the server." });
+                }
+            } else {
+                const errorText = await response.text();
+                setErrors({ general: errorText || "Invalid email or password." });
+            }
+        }catch (error) {
+            console.error("Login Error:", error);
+            setErrors({ general: "An unexpected error occurred. Please try again." });
+        } finally {
+            setSubmitting(false);
+        }
+        
     };
 
     return (
@@ -85,7 +95,7 @@ export default function SignUpFormik({ setLoggedSignUp, setNameSignUp }) { // se
                     validationSchema={validationSchema}
                     onSubmit={handleSubmit}
                 >
-                    {({ isSubmitting, values }) => (
+                    {({ isSubmitting, errors }) => (
                         <Form className="w-full flex items-center flex-col">
                             <div className="mb-4 relative">
                                 <Field
@@ -195,13 +205,18 @@ export default function SignUpFormik({ setLoggedSignUp, setNameSignUp }) { // se
                                 <Field type="checkbox" name="allowOffers" className="ml-2" />
                             </div>
 
+                            {errors.general && (
+                                <div className="mb-4 text-red-700 font-bold text-center">
+                                    {errors.general}
+                                </div>
+                            )}
+
                             <button type="submit" disabled={isSubmitting} className="btn">
                                 Submit
                             </button>
                         </Form>
                     )}
                 </Formik>
-                <Message loginMessage={data} />
                 <Link href="/auth/login">
                     <p >Do you already have an account? <span className="text-blue-500 hover:underline">Login</span></p>
                 </Link>

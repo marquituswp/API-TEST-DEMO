@@ -54,8 +54,7 @@ export default function ReviewWeb({ webId }) {
                     setErrors({ general: "Unexpected response from the server." });
                 }
             } else {
-                const errorText = await response.text();
-                setErrors({ general: errorText || "Invalid email or password." });
+                setErrors({ general: "Invalid values" });
             }
         } catch (error) {
             console.error("Login Error:", error);

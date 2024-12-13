@@ -1,5 +1,20 @@
-# API-Immune
-Entrega de ejercicio API para universidad IMMUNE
+# API-TEST-DEMO
+
+# Descripción
+API-TEST-DEMO es una aplicación web que permite a los usuarios registrados visualizar y filtrar webs, dejar reviews, editar su perfil y borrar su cuenta. Además, los administradores pueden manejar los comercios y los comercios pueden manejar las webs.
+
+Finalidad: Demostración de una API RESTful con autenticación y autorización, validación de datos, documentación con Swagger y envío de correos electrónicos.
+
+Envío de correos electrónicos: Funcionalidad creada en el backend pero no implementada en la aplicación web.
+
+# Tecnologías
+- Backend: Node.js, Express, MongoDB
+- Frontend: Next.js
+- Base de datos: MongoDB
+- Autenticación: JWT
+- Validación: express-validator
+- Documentación: Swagger
+
 
 # Backend
 Usar el comando `pnpm install` para instalar las dependencias necesarias.

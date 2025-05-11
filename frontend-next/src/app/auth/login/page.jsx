@@ -114,7 +114,7 @@ export default function Login() {
                 {/* Enlace para crear una cuenta */}
                 <Link href="/auth/register">
                     <p className="mt-4">
-                        You don't have an account?{" "}
+                        {" You don't have an account?"}
                         <span className="text-blue-500 hover:underline">Create account</span>
                     </p>
                 </Link>
